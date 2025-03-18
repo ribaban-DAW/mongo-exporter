@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - pracgo-net
+    volumes:
+      - mongodb_data:/data/db
+    restart: always
+
+  pracgo: 
+    build:
+      context: .
+      dockerfile: build/docker/Dockerfile
+    container_name: pracgo
+    networks:
+      - pracgo-net
+    depends_on:
+      - mongodb
+    tty: true
+    stdin_open: true
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+
+networks:
+  pracgo-net:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local

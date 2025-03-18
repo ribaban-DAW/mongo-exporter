@@ -8,3 +8,14 @@ Este proyecto consiste en un sistema de recopilación de métricas de una base d
 - Docker
 - MongoDB
 
+# Uso
+
+Crear los contenedores
+```
+docker compose up --build -d
+```
+
+Conectarse al contenedor
+```
+docker exec -it pracgo bash
+```
