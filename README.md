@@ -19,3 +19,17 @@ Conectarse al contenedor
 ```
 docker exec -it pracgo bash
 ```
+
+Ejecutar el programa
+
+```
+go run ./cmd/pracgo
+```
+
+# Referencias
+
+https://docs.docker.com/reference/dockerfile/
+https://go.dev/doc/effective_go
+https://gobyexample.com/
+https://www.geeksforgeeks.org/how-to-use-go-with-mongodb/
+https://docs.docker.com/reference/compose-file/

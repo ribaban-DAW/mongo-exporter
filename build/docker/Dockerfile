@@ -18,4 +18,6 @@ RUN apt-get update \
 	&& rm go1.24.1.linux-amd64.tar.gz \
 	&& echo "export PATH=$PATH:/PracGo/go/bin" > ~/.bashrc
 
+COPY . /PracGo
+
 CMD ["/bin/bash"]
