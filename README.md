@@ -33,3 +33,4 @@ go run ./cmd/pracgo
 - https://gobyexample.com/
 - https://www.geeksforgeeks.org/how-to-use-go-with-mongodb/
 - https://docs.docker.com/reference/compose-file/
+- https://www.mongodb.com/resources/products/fundamentals/create-database
