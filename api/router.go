@@ -14,6 +14,10 @@ func setupRouter() *gin.Engine {
 	router := gin.Default()
 
 	v1 := router.Group("/v1")
+
+	addHealthcheckRoutes(v1)
+	addHelloRoutes(v1)
 	addStudentRoutes(v1)
+
 	return router
 }
