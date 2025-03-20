@@ -53,10 +53,6 @@ Revisa [API Endpoints](#api-endpoints) para ver los endpoints disponibles.
 # Referencias
 
 - https://go.dev/doc/tutorial/web-service-gin
-- https://go.dev/doc/tutorial/web-service-gin
-- https://youtu.be/67yGbvyM1is
-- https://gin-gonic.com/docs
-- https://github.com/gin-gonic/examples/tree/master/group-routes
 - https://youtu.be/67yGbvyM1is
 - https://gin-gonic.com/docs
 - https://github.com/gin-gonic/examples/tree/master/group-routes
