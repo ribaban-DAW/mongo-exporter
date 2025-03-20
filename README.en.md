@@ -6,14 +6,16 @@ This project consists in a Metric Collection System for a database to monitor th
 
 |Method|Endpoint|Description|
 |-|-|-|
-|`GET`|`/v1/students`|Get all students| 
-|`GET`|`/v1/students/:id`|Get student by ID| 
+|`GET`|`/v1/healthcheck`|Get the health status of the API|
+|`GET`|`/v1/hello`|Get "hello world" message|
+|`GET`|`/v1/students`|Get a list of all students|
+|`GET`|`/v1/students/:id`|Get a student by ID|
 
-# Installation
+# Usage
 
 Clone the repository
 ```
-git clone https://github.com/ribaban-DAW/mongo-exporter
+git clone https://github.com/SrVariable/mongo-exporter
 ```
 
 Navigate to the project folder
@@ -21,25 +23,20 @@ Navigate to the project folder
 cd mongo-exporter
 ```
 
-Install dependencies
+Build the containers
 ```
-go mod tidy
-```
-
-# Usage
-
-Run the program
-```
-go run ./cmd/mongo-exporter
+make
 ```
 
-Alternatively, you can build an executable and run it
-```
-go build ./cmd/mongo-exporter
-./mongo-exporter
-```
+> [!NOTE]
+>
+> If you don't have `make`, you can run:
+> ```
+> docker compose down
+> docker compose up --build -d
+> ```
 
-Once it's running, you can interact with the API using your browser, curl, or any method you prefer.
+Once it's built, you can interact with the API using your browser, curl, or any method you prefer.
 - To get a list of every student:
 ```
 curl localhost:8080/v1/students
@@ -57,3 +54,6 @@ Check [API Endpoints](#api-endpoints) to see available endpoints.
 - https://youtu.be/67yGbvyM1is
 - https://gin-gonic.com/docs
 - https://github.com/gin-gonic/examples/tree/master/group-routes
+- https://stackoverflow.com/questions/33322103/multiple-froms-what-it-means
+- https://stackoverflow.com/questions/75973805/creating-dockerfile-for-golang-web-application
+- https://www.docker.com/blog/developing-go-apps-docker/

@@ -1,0 +1,30 @@
+name: mongo-exporter
+
+services:
+  database:
+    container_name: database
+    build:
+      context: docker/mongo
+    tty: true
+    ports:
+      - 27017:27017
+    environment:
+        MONGO_INITDB_DATABASE: MyDatabaseName
+    volumes:
+      - ./docker/mongo/data:/data/db
+    networks:
+      - mongo-exporter-network
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: docker/golang/Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - mongo-exporter-network
+
+#Docker Networks
+networks:
+  mongo-exporter-network:
+    name: mongo-exporter-network
