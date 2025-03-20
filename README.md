@@ -1,57 +1,59 @@
 # mongo-exporter
 
-This project consists in a Metric Collection System for a database to monitor the data. It's developped as part of my first year internship in [iAR Soft](https://www.iar-soft.com/).
+Este proyecto consiste en un sistema de recolección de métricas de una base de datos para monitorizar los datos. Desarrollado como parte de mis prácticas de primer año en el Grado Superior de Desarrollo de Aplicaciones Web en la empresa [iAR Soft](https://www.iar-soft.com/).
 
 # API Endpoints
 
-|Method|Endpoint|Description|
+|Método|Endpoint|Descripción|
 |-|-|-|
-|`GET`|`/v1/students`|Get all students| 
-|`GET`|`/v1/students/:id`|Get student by ID| 
+|`GET`|`/v1/students`|Obtener todos los estudiantes| 
+|`GET`|`/v1/students/:id`|Obtener un estudiante por ID| 
 
-# Installation
+# Instalación
 
-Clone the repository
+Clonar el repositorio
 ```
 git clone https://github.com/ribaban-DAW/mongo-exporter
 ```
 
-Navigate to the project folder
+Navegar al directorio del proyecto
 ```
 cd mongo-exporter
 ```
 
-Install dependencies
+Instalar dependencias
 ```
 go mod tidy
 ```
 
-# Usage
+# Uso
 
-Run the program
+Ejecuta el programa
 ```
 go run ./cmd/mongo-exporter
 ```
 
-Alternatively, you can build an executable and run it
+De manera alternativa, puedes crear el ejecutable y ejecutarlo.
 ```
 go build ./cmd/mongo-exporter
 ./mongo-exporter
 ```
 
-Once it's running, you can interact with the API using your browser, curl, or any method you prefer.
-- To get a list of every student:
+Una vez esté en ejecución, puedes interactuar con la API utilizando tu navegador, curl o cualquier otro método que prefieras.
+
+- Para obtener una lista de todos los estudiante:
 ```
 curl localhost:8080/v1/students
 ```
-- To get the student by ID:
+
+- Para obtener el estudiante por ID:
 ```
 curl localhost:8080/v1/students/1
 ```
 
-Check [API Endpoints](#api-endpoints) to see available endpoints.
+Revisa [API Endpoints](#api-endpoints) para ver los endpoints disponibles.
 
-# References
+# Referencias
 
 - https://go.dev/doc/tutorial/web-service-gin
 - https://youtu.be/67yGbvyM1is
