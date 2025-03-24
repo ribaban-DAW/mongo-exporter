@@ -10,8 +10,6 @@ Este proyecto consiste en un sistema de recolección de métricas de una base de
 |`GET`|`/v1/hello`|Obtener el mensaje "hello world"|
 |`GET`|`/v1/metrics`|Obtener una lista de métricas|
 |`GET`|`/v1/metrics/:name`|Obtener una métrica por nombre|
-|`GET`|`/v1/students`|Obtener una lista de todos estudiantes|
-|`GET`|`/v1/students/:id`|Obtener un estudiante por ID|
 
 # Uso
 

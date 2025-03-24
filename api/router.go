@@ -21,7 +21,6 @@ func setupRouter(client *mongo.Client) *gin.Engine {
 	addHealthcheckRoutes(v1)
 	addHelloRoutes(v1)
 	addMetricRoutes(client, v1)
-	addStudentRoutes(v1)
 
 	return router
 }

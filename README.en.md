@@ -10,8 +10,6 @@ This project consists in a Metric Collection System for a database to monitor th
 |`GET`|`/v1/hello`|Get "hello world" message|
 |`GET`|`/v1/metrics`|Get a list of metrics|
 |`GET`|`/v1/metrics/:name`|Get a metric by name|
-|`GET`|`/v1/students`|Get a list of all students|
-|`GET`|`/v1/students/:id`|Get a student by ID|
 
 # Usage
 
