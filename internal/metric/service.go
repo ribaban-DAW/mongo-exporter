@@ -17,7 +17,7 @@ func NewMetricService(repo MetricRepository) *metricService {
 	return &metricService{repo}
 }
 
-func (ms *metricService) FindMetrics(c context.Context) ([]Metric, error){
+func (ms *metricService) FindMetrics(c context.Context) ([]Metric, error) {
 	return ms.repo.GetMetrics(c)
 }
 

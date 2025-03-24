@@ -1,10 +1,11 @@
 package metric
 
 import (
-	"fmt"
-	"errors"
 	"context"
-	"time"
+	"errors"
+	"fmt"
+
+	"github.com/SrVariable/mongo-exporter/internal/utils"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -44,15 +45,10 @@ func (dr *DatabaseRepository) GetMetrics(c context.Context) ([]Metric, error) {
 		return nil, errors.New("wrong type")
 	}
 	for metricName, metricValue := range opcounters {
-		now := time.Now()
 		metric := Metric{
-			Name: metricName,
-			Value: fmt.Sprintf("%d", metricValue),
-			Timestamp: fmt.Sprintf(
-				"%4d-%02d-%02d %02d:%02d:%02d",
-				now.Year(), now.Month(), now.Day(),
-				now.Hour(), now.Minute(), now.Second(),
-			),
+			Name:      metricName,
+			Value:     fmt.Sprintf("%d", metricValue),
+			Timestamp: utils.GetTime(),
 		}
 		metrics = append(metrics, metric)
 	}
@@ -80,15 +76,10 @@ func (dr *DatabaseRepository) GetMetricByName(c context.Context, name string) (*
 		return nil, errors.New("metric not found")
 	}
 
-	now := time.Now()
 	metric := Metric{
-		Name: name,
-		Value: fmt.Sprintf("%d", value),
-		Timestamp: fmt.Sprintf(
-			"%4d-%02d-%02d %02d:%02d:%02d",
-			now.Year(), now.Month(), now.Day(),
-			now.Hour(), now.Minute(), now.Second(),
-		),
+		Name:      name,
+		Value:     fmt.Sprintf("%d", value),
+		Timestamp: utils.GetTime(),
 	}
 	return &metric, nil
 }
