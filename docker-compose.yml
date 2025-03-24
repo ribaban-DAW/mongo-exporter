@@ -11,7 +11,7 @@ services:
     environment:
         MONGO_INITDB_DATABASE: MyDatabaseName
     volumes:
-      - ./docker/mongo/data:/data/db
+      - mongo-data:/data/db
     networks:
       - mongo-exporter-network
   app:
@@ -26,7 +26,11 @@ services:
     environment:
       - MONGO_URI=mongodb://database:27017
 
-#Docker Networks
+# Docker Volumes
+volumes:
+  mongo-data:
+
+# Docker Networks
 networks:
   mongo-exporter-network:
     name: mongo-exporter-network
