@@ -2,14 +2,15 @@ name: mongo-exporter
 
 services:
   database:
-    container_name: database
+    container_name: mongo
     build:
       context: docker/mongo
+    env_file: .env
     tty: true
     ports:
-      - 27017:27017
+      - ${DB_PORT}:27017
     environment:
-        MONGO_INITDB_DATABASE: MyDatabaseName
+        MONGO_INITDB_DATABASE: ${DB_NAME}
     volumes:
       - mongo-data:/data/db
     networks:
@@ -17,14 +18,18 @@ services:
   app:
     container_name: app
     build:
+      # NOTE: Set the context to the current directory to have reference for go.mod, go.sum
       context: .
       dockerfile: docker/golang/Dockerfile
+    env_file: .env
+    depends_on:
+      - database
     ports:
-      - 8080:8080
+      - ${APP_PORT}:8080
     networks:
       - mongo-exporter-network
     environment:
-      - MONGO_URI=mongodb://database:27017
+      - MONGO_URI=mongodb://${DB_HOST}:${DB_PORT}
 
 # Docker Volumes
 volumes:

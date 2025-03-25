@@ -1,6 +1,9 @@
 # mongo-exporter
 
-Este proyecto consiste en un sistema de recolección de métricas de una base de datos para monitorizar los datos. Desarrollado como parte de mis prácticas de primer año en el Grado Superior de Desarrollo de Aplicaciones Web en la empresa [iAR Soft](https://www.iar-soft.com/).
+Este proyecto consiste en un sistema de recolección de métricas de una base de
+datos para monitorizar los datos. Desarrollado como parte de mis prácticas de
+primer año en el Grado Superior de Desarrollo de Aplicaciones Web en la empresa
+[iAR Soft](https://www.iar-soft.com/).
 
 # API Endpoints
 
@@ -13,17 +16,32 @@ Este proyecto consiste en un sistema de recolección de métricas de una base de
 
 # Uso
 
-Clonar el repositorio
+Clona el repositorio:
 ```
 git clone https://github.com/SrVariable/mongo-exporter
 ```
 
-Navegar al directorio del proyecto
+Navega al directorio del proyecto:
 ```
 cd mongo-exporter
 ```
 
-Construye los contenedores
+Crea el archivo `.env` siguiendo el `.env.example` para configurar las
+variables de entorno. Para la configuración por defecto, copia `.env.example` a
+`.env`:
+```
+cp .env.example .env
+```
+
+El `.env` debería ser similar a esto:
+```
+APP_PORT=8080
+DB_NAME=MyDatabaseName
+DB_HOST=mongo
+DB_PORT=27017
+```
+
+Construye los contenedores:
 ```
 make
 ```
@@ -36,16 +54,17 @@ make
 > docker compose up --build -d
 > ```
 
-Una vez esté construido, puedes interactuar con la API utilizando tu navegador, curl o cualquier otro método que prefieras.
+Una vez esté construido, puedes interactuar con la API utilizando tu navegador,
+curl o cualquier otro método que prefieras.
 
 - Para obtener una lista de métricas:
 ```
-curl localhost:8080/v1/metrics
+curl http://localhost:8080/v1/metrics
 ```
 
 - Para obtener el número de inserts a la base de datos
 ```
-curl localhost:8080/v1/metrics/insert
+curl http://localhost:8080/v1/metrics/insert
 ```
 
 Revisa [API Endpoints](#api-endpoints) para ver los endpoints disponibles.
