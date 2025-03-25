@@ -1,8 +1,6 @@
 package metric
 
-import (
-	"context"
-)
+import "context"
 
 type MetricService interface {
 	FindMetrics(c context.Context) ([]Metric, error)

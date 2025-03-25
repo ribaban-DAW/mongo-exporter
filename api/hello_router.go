@@ -2,7 +2,6 @@ package api
 
 import (
 	"github.com/SrVariable/mongo-exporter/internal/hello"
-
 	"github.com/gin-gonic/gin"
 )
 

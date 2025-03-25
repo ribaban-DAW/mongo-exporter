@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/SrVariable/mongo-exporter/internal/utils"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )

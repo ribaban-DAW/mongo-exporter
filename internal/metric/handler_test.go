@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/SrVariable/mongo-exporter/internal/utils"
-
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )

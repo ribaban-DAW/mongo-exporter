@@ -1,18 +1,15 @@
 package api
 
-import (
-	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
-)
+import "github.com/gin-gonic/gin"
 
 var router = gin.Default()
 
-func Run(client *mongo.Client, uri string) (err error) {
-	router := setupRouter(client)
+func Run(uri string) (err error) {
+	router := setupRouter()
 	return router.Run(uri)
 }
 
-func setupRouter(client *mongo.Client) *gin.Engine {
+func setupRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
@@ -20,7 +17,7 @@ func setupRouter(client *mongo.Client) *gin.Engine {
 
 	addHealthcheckRoutes(v1)
 	addHelloRoutes(v1)
-	addMetricRoutes(client, v1)
+	addMetricRoutes(v1)
 
 	return router
 }
