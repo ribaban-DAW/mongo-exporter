@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
-	"github.com/SrVariable/mongo-exporter/internal/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -47,7 +47,7 @@ func (dr *DatabaseRepository) GetMetrics(c context.Context) ([]Metric, error) {
 		metric := Metric{
 			Name:      metricName,
 			Value:     fmt.Sprintf("%d", metricValue),
-			Timestamp: utils.GetTime(),
+			Timestamp: time.Now(),
 		}
 		metrics = append(metrics, metric)
 	}
@@ -78,7 +78,7 @@ func (dr *DatabaseRepository) GetMetricByName(c context.Context, name string) (*
 	metric := Metric{
 		Name:      name,
 		Value:     fmt.Sprintf("%d", value),
-		Timestamp: utils.GetTime(),
+		Timestamp: time.Now(),
 	}
 	return &metric, nil
 }

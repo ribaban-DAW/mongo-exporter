@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
-	"github.com/SrVariable/mongo-exporter/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,10 +16,10 @@ func TestGetMetrics(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 
 	metrics := []Metric{
-		{Name: "insert", Value: "1", Timestamp: utils.GetTime()},
-		{Name: "delete", Value: "2", Timestamp: utils.GetTime()},
-		{Name: "query", Value: "3", Timestamp: utils.GetTime()},
-		{Name: "update", Value: "4", Timestamp: utils.GetTime()},
+		{Name: "insert", Value: "1", Timestamp: time.Now()},
+		{Name: "delete", Value: "2", Timestamp: time.Now()},
+		{Name: "query", Value: "3", Timestamp: time.Now()},
+		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
 	repo := NewMockRepository(metrics)
@@ -34,7 +34,12 @@ func TestGetMetrics(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, want, got)
+
+	assert.Equal(t, len(want), len(got))
+	for i := range metrics {
+		assert.Equal(t, want[i].Name, got[i].Name)
+		assert.Equal(t, want[i].Value, got[i].Value)
+	}
 }
 
 func TestGetMetricsByName_Insert(t *testing.T) {
@@ -43,10 +48,10 @@ func TestGetMetricsByName_Insert(t *testing.T) {
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "insert"})
 
 	metrics := []Metric{
-		{Name: "insert", Value: "1", Timestamp: utils.GetTime()},
-		{Name: "delete", Value: "2", Timestamp: utils.GetTime()},
-		{Name: "query", Value: "3", Timestamp: utils.GetTime()},
-		{Name: "update", Value: "4", Timestamp: utils.GetTime()},
+		{Name: "insert", Value: "1", Timestamp: time.Now()},
+		{Name: "delete", Value: "2", Timestamp: time.Now()},
+		{Name: "query", Value: "3", Timestamp: time.Now()},
+		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
 	repo := NewMockRepository(metrics)
@@ -61,7 +66,8 @@ func TestGetMetricsByName_Insert(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, want, got)
+	assert.Equal(t, want.Name, got.Name)
+	assert.Equal(t, want.Value, got.Value)
 }
 
 func TestGetMetricsByName_Delete(t *testing.T) {
@@ -70,10 +76,10 @@ func TestGetMetricsByName_Delete(t *testing.T) {
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "delete"})
 
 	metrics := []Metric{
-		{Name: "insert", Value: "1", Timestamp: utils.GetTime()},
-		{Name: "delete", Value: "2", Timestamp: utils.GetTime()},
-		{Name: "query", Value: "3", Timestamp: utils.GetTime()},
-		{Name: "update", Value: "4", Timestamp: utils.GetTime()},
+		{Name: "insert", Value: "1", Timestamp: time.Now()},
+		{Name: "delete", Value: "2", Timestamp: time.Now()},
+		{Name: "query", Value: "3", Timestamp: time.Now()},
+		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
 	repo := NewMockRepository(metrics)
@@ -88,7 +94,8 @@ func TestGetMetricsByName_Delete(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, want, got)
+	assert.Equal(t, want.Name, got.Name)
+	assert.Equal(t, want.Value, got.Value)
 }
 
 func TestGetMetricsByName_Query(t *testing.T) {
@@ -97,10 +104,10 @@ func TestGetMetricsByName_Query(t *testing.T) {
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "query"})
 
 	metrics := []Metric{
-		{Name: "insert", Value: "1", Timestamp: utils.GetTime()},
-		{Name: "delete", Value: "2", Timestamp: utils.GetTime()},
-		{Name: "query", Value: "3", Timestamp: utils.GetTime()},
-		{Name: "update", Value: "4", Timestamp: utils.GetTime()},
+		{Name: "insert", Value: "1", Timestamp: time.Now()},
+		{Name: "delete", Value: "2", Timestamp: time.Now()},
+		{Name: "query", Value: "3", Timestamp: time.Now()},
+		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
 	repo := NewMockRepository(metrics)
@@ -115,7 +122,8 @@ func TestGetMetricsByName_Query(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, want, got)
+	assert.Equal(t, want.Name, got.Name)
+	assert.Equal(t, want.Value, got.Value)
 }
 
 func TestGetMetricsByName_Update(t *testing.T) {
@@ -124,10 +132,10 @@ func TestGetMetricsByName_Update(t *testing.T) {
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "update"})
 
 	metrics := []Metric{
-		{Name: "insert", Value: "1", Timestamp: utils.GetTime()},
-		{Name: "delete", Value: "2", Timestamp: utils.GetTime()},
-		{Name: "query", Value: "3", Timestamp: utils.GetTime()},
-		{Name: "update", Value: "4", Timestamp: utils.GetTime()},
+		{Name: "insert", Value: "1", Timestamp: time.Now()},
+		{Name: "delete", Value: "2", Timestamp: time.Now()},
+		{Name: "query", Value: "3", Timestamp: time.Now()},
+		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
 	repo := NewMockRepository(metrics)
@@ -142,7 +150,8 @@ func TestGetMetricsByName_Update(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, want, got)
+	assert.Equal(t, want.Name, got.Name)
+	assert.Equal(t, want.Value, got.Value)
 }
 
 func TestGetMetricsByName_Empty(t *testing.T) {
@@ -151,10 +160,10 @@ func TestGetMetricsByName_Empty(t *testing.T) {
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: ""})
 
 	metrics := []Metric{
-		{Name: "insert", Value: "1", Timestamp: utils.GetTime()},
-		{Name: "delete", Value: "2", Timestamp: utils.GetTime()},
-		{Name: "query", Value: "3", Timestamp: utils.GetTime()},
-		{Name: "update", Value: "4", Timestamp: utils.GetTime()},
+		{Name: "insert", Value: "1", Timestamp: time.Now()},
+		{Name: "delete", Value: "2", Timestamp: time.Now()},
+		{Name: "query", Value: "3", Timestamp: time.Now()},
+		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
 	repo := NewMockRepository(metrics)
@@ -178,10 +187,10 @@ func TestGetMetricsByName_NoExist(t *testing.T) {
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "foo"})
 
 	metrics := []Metric{
-		{Name: "insert", Value: "1", Timestamp: utils.GetTime()},
-		{Name: "delete", Value: "2", Timestamp: utils.GetTime()},
-		{Name: "query", Value: "3", Timestamp: utils.GetTime()},
-		{Name: "update", Value: "4", Timestamp: utils.GetTime()},
+		{Name: "insert", Value: "1", Timestamp: time.Now()},
+		{Name: "delete", Value: "2", Timestamp: time.Now()},
+		{Name: "query", Value: "3", Timestamp: time.Now()},
+		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
 	repo := NewMockRepository(metrics)

@@ -27,4 +27,3 @@ func (mr *MockRepository) GetMetricByName(c context.Context, name string) (*Metr
 	}
 	return nil, errors.New("metric not found")
 }
-
