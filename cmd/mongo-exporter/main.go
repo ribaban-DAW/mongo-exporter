@@ -4,11 +4,12 @@ import (
 	"fmt"
 
 	router "github.com/SrVariable/mongo-exporter/api"
-	"github.com/SrVariable/mongo-exporter/internal/database"
+	"github.com/SrVariable/mongo-exporter/internal/database/mongo"
 )
 
+// TODO: Abstract the database more so I only have to db.Connect() and db.Disconect()
 func main() {
-	db := database.GetInstance()
+	db := mongo.GetInstance()
 	if err := db.Connect(); err != nil {
 		fmt.Println(err)
 		return

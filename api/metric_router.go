@@ -1,15 +1,15 @@
 package api
 
 import (
-	"github.com/SrVariable/mongo-exporter/internal/database"
 	"github.com/SrVariable/mongo-exporter/internal/metric"
+	"github.com/SrVariable/mongo-exporter/internal/database/mongo"
 	"github.com/gin-gonic/gin"
 )
 
 func addMetricRoutes(rg *gin.RouterGroup) {
 	m := rg.Group("/metrics")
 
-	client := database.GetInstance().Client
+	client := mongo.GetInstance().Client
 	repo := metric.NewDatabaseRepository(client)
 	service := metric.NewMetricService(repo)
 
