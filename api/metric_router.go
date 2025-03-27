@@ -21,7 +21,7 @@ func addMetricRoutes(rg *gin.RouterGroup) {
 		metric.GetOpCountersHandler(service)(c)
 	})
 
-	m.GET("/:name", func(c *gin.Context) {
+	m.GET("/opcounters/:name", func(c *gin.Context) {
 		metric.GetOpCounterByNameHandler(service)(c)
 	})
 
