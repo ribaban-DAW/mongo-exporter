@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/SrVariable/mongo-exporter/internal/metric"
 	"github.com/SrVariable/mongo-exporter/internal/database/mongo"
+	"github.com/SrVariable/mongo-exporter/internal/metric"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,11 +13,23 @@ func addMetricRoutes(rg *gin.RouterGroup) {
 	repo := metric.NewDatabaseRepository(client)
 	service := metric.NewMetricService(repo)
 
-	m.GET("/", func(cg *gin.Context) {
-		metric.GetMetricsHandler(service)(cg)
+	m.GET("/", func(c *gin.Context) {
+		metric.GetAvailableMetricsHandler(service)(c)
 	})
 
-	m.GET("/:name", func(cg *gin.Context) {
-		metric.GetMetricByNameHandler(service)(cg)
+	m.GET("/opcounters", func(c *gin.Context) {
+		metric.GetOpCountersHandler(service)(c)
+	})
+
+	m.GET("/:name", func(c *gin.Context) {
+		metric.GetOpCounterByNameHandler(service)(c)
+	})
+
+	m.GET("/cpu", func(c *gin.Context) {
+		metric.GetCpuUsageHandler(service)(c)
+	})
+
+	m.GET("/ram", func(c *gin.Context) {
+		metric.GetRamUsageHandler(service)(c)
 	})
 }

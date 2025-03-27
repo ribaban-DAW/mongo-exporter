@@ -6,9 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetMetricsHandler(ms MetricService) gin.HandlerFunc {
+// NOTE: I don't know if makes sense
+func GetAvailableMetricsHandler(ms MetricService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		m, err := ms.FindMetrics(c.Request.Context())
+		c.JSON(http.StatusOK, gin.H{
+			"endpoints": []string{"cpu", "opcounters", "ram"},
+		})
+	}
+}
+
+func GetOpCountersHandler(ms MetricService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		m, err := ms.FindOpCounters(c.Request.Context())
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
 			return
@@ -17,10 +26,32 @@ func GetMetricsHandler(ms MetricService) gin.HandlerFunc {
 	}
 }
 
-func GetMetricByNameHandler(ms MetricService) gin.HandlerFunc {
+func GetOpCounterByNameHandler(ms MetricService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		name := c.Param("name")
-		m, err := ms.FindMetricByName(c.Request.Context(), name)
+		m, err := ms.FindOpCounterByName(c.Request.Context(), name)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, m)
+	}
+}
+
+func GetCpuUsageHandler(ms MetricService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		m, err := ms.FindCpuUsage(c.Request.Context())
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, m)
+	}
+}
+
+func GetRamUsageHandler(ms MetricService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		m, err := ms.FindRamUsage(c.Request.Context())
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
 			return

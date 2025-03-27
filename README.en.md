@@ -10,8 +10,10 @@ the data. It's developped as part of my first year internship in
 |-|-|-|
 |`GET`|`/v1/healthcheck`|Get the health status of the API|
 |`GET`|`/v1/hello`|Get "hello world" message|
-|`GET`|`/v1/metrics`|Get a list of metrics|
-|`GET`|`/v1/metrics/:name`|Get a metric by name|
+|`GET`|`/v1/metrics/opcounters`|Get a list of operation counters|
+|`GET`|`/v1/metrics/opcounters/:name`|Get an operation counter by name|
+|`GET`|`/v1/metrics/cpu`|Get the CPU usage in 1 second|
+|`GET`|`/v1/metrics/ram`|Get the RAM usage|
 
 # Usage
 

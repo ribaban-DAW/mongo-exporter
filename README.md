@@ -11,8 +11,10 @@ primer año en el Grado Superior de Desarrollo de Aplicaciones Web en la empresa
 |-|-|-|
 |`GET`|`/v1/healthcheck`|Obtener el estado de la API|
 |`GET`|`/v1/hello`|Obtener el mensaje "hello world"|
-|`GET`|`/v1/metrics`|Obtener una lista de métricas|
-|`GET`|`/v1/metrics/:name`|Obtener una métrica por nombre|
+|`GET`|`/v1/metrics/opcounters`|Obtener una lista de contador de operaciones|
+|`GET`|`/v1/metrics/opcounters/:name`|Obtener un contandor de operación por nombre|
+|`GET`|`/v1/metrics/cpu`|Obtener el uso de CPU en 1 segundo|
+|`GET`|`/v1/metrics/ram`|Obtener el uso de RAM|
 
 # Uso
 

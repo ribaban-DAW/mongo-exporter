@@ -26,7 +26,7 @@ func TestGetMetrics(t *testing.T) {
 	service := NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetMetricsHandlerMock(service, c)
+	GetOpCountersHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics
@@ -58,7 +58,7 @@ func TestGetMetricsByName_Insert(t *testing.T) {
 	service := NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetMetricByNameHandlerMock(service, c)
+	GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[0]
@@ -86,7 +86,7 @@ func TestGetMetricsByName_Delete(t *testing.T) {
 	service := NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetMetricByNameHandlerMock(service, c)
+	GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[1]
@@ -114,7 +114,7 @@ func TestGetMetricsByName_Query(t *testing.T) {
 	service := NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetMetricByNameHandlerMock(service, c)
+	GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[2]
@@ -142,7 +142,7 @@ func TestGetMetricsByName_Update(t *testing.T) {
 	service := NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetMetricByNameHandlerMock(service, c)
+	GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[3]
@@ -170,7 +170,7 @@ func TestGetMetricsByName_Empty(t *testing.T) {
 	service := NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetMetricByNameHandlerMock(service, c)
+	GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
 	want := gin.H{"message": "metric not found"}
@@ -197,7 +197,7 @@ func TestGetMetricsByName_NoExist(t *testing.T) {
 	service := NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetMetricByNameHandlerMock(service, c)
+	GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
 	want := gin.H{"message": "metric not found"}

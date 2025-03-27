@@ -11,8 +11,10 @@ import (
 )
 
 type MetricRepository interface {
-	GetMetrics(c context.Context) ([]Metric, error)
-	GetMetricByName(c context.Context, name string) (*Metric, error)
+	GetOpCounters(c context.Context) ([]Metric, error)
+	GetOpCounterByName(c context.Context, name string) (*Metric, error)
+	GetCpuUsage(c context.Context) ([]Metric, error)
+	GetRamUsage(c context.Context) (*Metric, error)
 }
 
 type DatabaseRepository struct {
@@ -25,21 +27,24 @@ func NewDatabaseRepository(client *mongo.Client) *DatabaseRepository {
 	}
 }
 
-// It currently shows `opcounters`, but can be modified
-// depending on the specific metrics we want to get
-func (dr *DatabaseRepository) GetMetrics(c context.Context) ([]Metric, error) {
+func (dr *DatabaseRepository) getServerStatus(c context.Context) (bson.M, error) {
 	var result bson.M
 	cmd := bson.D{
 		{Key: "serverStatus", Value: 1},
 	}
 	err := dr.Client.Database("admin").RunCommand(c, cmd).Decode(&result)
+	return result, err
+}
+
+func (dr *DatabaseRepository) GetOpCounters(c context.Context) ([]Metric, error) {
+	serverStatus, err := dr.getServerStatus(c)
 	if err != nil {
 		return nil, err
 	}
 
 	var metrics []Metric
 
-	opcounters, ok := result["opcounters"].(bson.M)
+	opcounters, ok := serverStatus["opcounters"].(bson.M)
 	if !ok {
 		return nil, errors.New("wrong type")
 	}
@@ -55,17 +60,13 @@ func (dr *DatabaseRepository) GetMetrics(c context.Context) ([]Metric, error) {
 	return metrics, nil
 }
 
-func (dr *DatabaseRepository) GetMetricByName(c context.Context, name string) (*Metric, error) {
-	var result bson.M
-	cmd := bson.D{
-		{Key: "serverStatus", Value: 1},
-	}
-	err := dr.Client.Database("admin").RunCommand(c, cmd).Decode(&result)
+func (dr *DatabaseRepository) GetOpCounterByName(c context.Context, name string) (*Metric, error) {
+	serverStatus, err := dr.getServerStatus(c)
 	if err != nil {
 		return nil, err
 	}
 
-	opcounters, ok := result["opcounters"].(bson.M)
+	opcounters, ok := serverStatus["opcounters"].(bson.M)
 	if !ok {
 		return nil, errors.New("wrong type")
 	}
@@ -78,6 +79,59 @@ func (dr *DatabaseRepository) GetMetricByName(c context.Context, name string) (*
 	metric := Metric{
 		Name:      name,
 		Value:     fmt.Sprintf("%d", value),
+		Timestamp: time.Now(),
+	}
+	return &metric, nil
+}
+
+func (dr *DatabaseRepository) GetCpuUsage(c context.Context) ([]Metric, error) {
+	serverStatus, err := dr.getServerStatus(c)
+	if err != nil {
+		return nil, err
+	}
+
+	var metrics []Metric
+
+	extraInfo, ok := serverStatus["extra_info"].(bson.M)
+	if !ok {
+		return nil, errors.New("wrong type")
+	}
+	userTime := extraInfo["user_time_us"]
+	metrics = append(
+		metrics,
+		Metric{
+			Name:      "userTime",
+			Value:     fmt.Sprintf("%d", userTime),
+			Timestamp: time.Now(),
+		},
+	)
+	systemTime := extraInfo["system_time_us"]
+	metrics = append(
+		metrics,
+		Metric{
+			Name:      "systemTime",
+			Value:     fmt.Sprintf("%d", systemTime),
+			Timestamp: time.Now(),
+		},
+	)
+	return metrics, nil
+}
+
+func (dr *DatabaseRepository) GetRamUsage(c context.Context) (*Metric, error) {
+	serverStatus, err := dr.getServerStatus(c)
+	if err != nil {
+		return nil, err
+	}
+
+	mem, ok := serverStatus["mem"].(bson.M)
+	if !ok {
+		return nil, errors.New("wrong type")
+	}
+	resident := mem["resident"]
+
+	metric := Metric{
+		Name:      "resident",
+		Value:     fmt.Sprintf("%d", resident),
 		Timestamp: time.Now(),
 	}
 	return &metric, nil
