@@ -1,8 +1,6 @@
-package api
+package router
 
 import "github.com/gin-gonic/gin"
-
-var router = gin.Default()
 
 func Run(uri string) (err error) {
 	router := setupRouter()

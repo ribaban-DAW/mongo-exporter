@@ -1,8 +1,10 @@
-package api
+package router
 
 import (
 	"github.com/SrVariable/mongo-exporter/internal/database/mongo"
-	"github.com/SrVariable/mongo-exporter/internal/metric"
+	repo "github.com/SrVariable/mongo-exporter/internal/metric/repository/mongo"
+	"github.com/SrVariable/mongo-exporter/internal/metric/service"
+	"github.com/SrVariable/mongo-exporter/api/metric"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,11 +12,11 @@ func addMetricRoutes(rg *gin.RouterGroup) {
 	m := rg.Group("/metrics")
 
 	client := mongo.GetInstance().Client
-	repo := metric.NewDatabaseRepository(client)
-	service := metric.NewMetricService(repo)
+	repo := repo.NewDatabaseRepository(client)
+	service := service.NewMetricService(repo)
 
 	m.GET("/", func(c *gin.Context) {
-		metric.GetAvailableMetricsHandler(service)(c)
+		metric.GetSummaryHandler(service)(c)
 	})
 
 	m.GET("/opcounters", func(c *gin.Context) {

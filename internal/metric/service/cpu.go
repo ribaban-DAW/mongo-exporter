@@ -1,4 +1,4 @@
-package metric
+package service
 
 import (
 	"context"
@@ -7,33 +7,12 @@ import (
 	"runtime"
 	"strconv"
 	"time"
+
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
 )
 
-type MetricService interface {
-	FindOpCounters(c context.Context) ([]Metric, error)
-	FindOpCounterByName(c context.Context, name string) (*Metric, error)
-	FindCpuUsage(c context.Context) (*Metric, error)
-	FindRamUsage(c context.Context) (*Metric, error)
-}
-
-type metricService struct {
-	repo MetricRepository
-}
-
-func NewMetricService(repo MetricRepository) *metricService {
-	return &metricService{repo}
-}
-
-func (ms *metricService) FindOpCounters(c context.Context) ([]Metric, error) {
-	return ms.repo.GetOpCounters(c)
-}
-
-func (ms *metricService) FindOpCounterByName(c context.Context, name string) (*Metric, error) {
-	return ms.repo.GetOpCounterByName(c, name)
-}
-
 // NOTE: This will be simplified when I implement Value Objects
-func calculateCpuUsage(metricsStart, metricsEnd []Metric, elapsedSecs float64) (float64, error) {
+func calculateCpuUsage(metricsStart, metricsEnd []domain.Metric, elapsedSecs float64) (float64, error) {
 	// Type casting
 	userTimeStart, err := strconv.ParseInt(metricsStart[0].Value, 10, 64)
 	if err != nil {
@@ -61,7 +40,7 @@ func calculateCpuUsage(metricsStart, metricsEnd []Metric, elapsedSecs float64) (
 	return cpuUsage, nil
 }
 
-func (ms *metricService) FindCpuUsage(c context.Context) (*Metric, error) {
+func (ms *metricService) FindCpuUsage(c context.Context) (*domain.Metric, error) {
 	elapsedSecs := 1.0
 
 	metricsStart, err := ms.repo.GetCpuUsage(c)
@@ -80,20 +59,10 @@ func (ms *metricService) FindCpuUsage(c context.Context) (*Metric, error) {
 	if err != nil {
 		return nil, err
 	}
-	metric := Metric{
+	metric := domain.Metric{
 		Name:      "usage",
 		Value:     fmt.Sprintf("%.2f%%", cpuUsage),
 		Timestamp: time.Now(),
 	}
 	return &metric, nil
-}
-
-func (ms *metricService) FindRamUsage(c context.Context) (*Metric, error) {
-	metric, err := ms.repo.GetRamUsage(c)
-	if err != nil {
-		return nil, err
-	}
-	metric.Name = "usage"
-	metric.Value = metric.Value + " MiB"
-	return metric, nil
 }

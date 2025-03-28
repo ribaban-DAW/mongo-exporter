@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	router "github.com/SrVariable/mongo-exporter/api"
+	"github.com/SrVariable/mongo-exporter/router"
 	"github.com/SrVariable/mongo-exporter/internal/database/mongo"
 )
 

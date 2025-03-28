@@ -1,4 +1,4 @@
-TEST_DIR = ./internal/hello ./internal/metric
+TEST_DIR = ./api/...
 
 deploy:
 	clear

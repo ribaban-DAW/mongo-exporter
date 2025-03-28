@@ -9,28 +9,31 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"github.com/SrVariable/mongo-exporter/internal/metric/service"
+	"github.com/SrVariable/mongo-exporter/internal/metric/mock"
 )
 
-func TestGetMetrics(t *testing.T) {
+func TestGetOpCounters(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	metrics := []Metric{
+	metrics := []domain.Metric{
 		{Name: "insert", Value: "1", Timestamp: time.Now()},
 		{Name: "delete", Value: "2", Timestamp: time.Now()},
 		{Name: "query", Value: "3", Timestamp: time.Now()},
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := NewMockRepository(metrics)
-	service := NewMetricService(repo)
+	repo := mock.NewMockRepository(metrics)
+	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetOpCountersHandlerMock(service, c)
+	mock.GetOpCountersHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics
-	var got []Metric
+	var got []domain.Metric
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
@@ -42,27 +45,27 @@ func TestGetMetrics(t *testing.T) {
 	}
 }
 
-func TestGetMetricsByName_Insert(t *testing.T) {
+func TestGetOpCounterByName_Insert(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "insert"})
 
-	metrics := []Metric{
+	metrics := []domain.Metric{
 		{Name: "insert", Value: "1", Timestamp: time.Now()},
 		{Name: "delete", Value: "2", Timestamp: time.Now()},
 		{Name: "query", Value: "3", Timestamp: time.Now()},
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := NewMockRepository(metrics)
-	service := NewMetricService(repo)
+	repo := mock.NewMockRepository(metrics)
+	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetOpCounterByNameHandlerMock(service, c)
+	mock.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[0]
-	var got Metric
+	var got domain.Metric
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
@@ -70,27 +73,27 @@ func TestGetMetricsByName_Insert(t *testing.T) {
 	assert.Equal(t, want.Value, got.Value)
 }
 
-func TestGetMetricsByName_Delete(t *testing.T) {
+func TestGetOpCounterByName_Delete(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "delete"})
 
-	metrics := []Metric{
+	metrics := []domain.Metric{
 		{Name: "insert", Value: "1", Timestamp: time.Now()},
 		{Name: "delete", Value: "2", Timestamp: time.Now()},
 		{Name: "query", Value: "3", Timestamp: time.Now()},
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := NewMockRepository(metrics)
-	service := NewMetricService(repo)
+	repo := mock.NewMockRepository(metrics)
+	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetOpCounterByNameHandlerMock(service, c)
+	mock.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[1]
-	var got Metric
+	var got domain.Metric
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
@@ -98,27 +101,27 @@ func TestGetMetricsByName_Delete(t *testing.T) {
 	assert.Equal(t, want.Value, got.Value)
 }
 
-func TestGetMetricsByName_Query(t *testing.T) {
+func TestGetOpCounterByName_Query(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "query"})
 
-	metrics := []Metric{
+	metrics := []domain.Metric{
 		{Name: "insert", Value: "1", Timestamp: time.Now()},
 		{Name: "delete", Value: "2", Timestamp: time.Now()},
 		{Name: "query", Value: "3", Timestamp: time.Now()},
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := NewMockRepository(metrics)
-	service := NewMetricService(repo)
+	repo := mock.NewMockRepository(metrics)
+	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetOpCounterByNameHandlerMock(service, c)
+	mock.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[2]
-	var got Metric
+	var got domain.Metric
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
@@ -126,27 +129,27 @@ func TestGetMetricsByName_Query(t *testing.T) {
 	assert.Equal(t, want.Value, got.Value)
 }
 
-func TestGetMetricsByName_Update(t *testing.T) {
+func TestGetOpCounterByName_Update(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "update"})
 
-	metrics := []Metric{
+	metrics := []domain.Metric{
 		{Name: "insert", Value: "1", Timestamp: time.Now()},
 		{Name: "delete", Value: "2", Timestamp: time.Now()},
 		{Name: "query", Value: "3", Timestamp: time.Now()},
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := NewMockRepository(metrics)
-	service := NewMetricService(repo)
+	repo := mock.NewMockRepository(metrics)
+	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetOpCounterByNameHandlerMock(service, c)
+	mock.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[3]
-	var got Metric
+	var got domain.Metric
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
@@ -154,23 +157,23 @@ func TestGetMetricsByName_Update(t *testing.T) {
 	assert.Equal(t, want.Value, got.Value)
 }
 
-func TestGetMetricsByName_Empty(t *testing.T) {
+func TestGetOpCounterByName_Empty(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: ""})
 
-	metrics := []Metric{
+	metrics := []domain.Metric{
 		{Name: "insert", Value: "1", Timestamp: time.Now()},
 		{Name: "delete", Value: "2", Timestamp: time.Now()},
 		{Name: "query", Value: "3", Timestamp: time.Now()},
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := NewMockRepository(metrics)
-	service := NewMetricService(repo)
+	repo := mock.NewMockRepository(metrics)
+	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetOpCounterByNameHandlerMock(service, c)
+	mock.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
 	want := gin.H{"message": "metric not found"}
@@ -181,23 +184,23 @@ func TestGetMetricsByName_Empty(t *testing.T) {
 	assert.Equal(t, want, got)
 }
 
-func TestGetMetricsByName_NoExist(t *testing.T) {
+func TestGetOpCounterByName_NoExist(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Params = append(c.Params, gin.Param{Key: "name", Value: "foo"})
 
-	metrics := []Metric{
+	metrics := []domain.Metric{
 		{Name: "insert", Value: "1", Timestamp: time.Now()},
 		{Name: "delete", Value: "2", Timestamp: time.Now()},
 		{Name: "query", Value: "3", Timestamp: time.Now()},
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := NewMockRepository(metrics)
-	service := NewMetricService(repo)
+	repo := mock.NewMockRepository(metrics)
+	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	GetOpCounterByNameHandlerMock(service, c)
+	mock.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
 	want := gin.H{"message": "metric not found"}
