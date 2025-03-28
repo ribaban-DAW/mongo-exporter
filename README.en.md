@@ -1,6 +1,8 @@
 # mongo-exporter
 
-This project consists in a Metric Collection System for a database to monitor the data. It's developped as part of my first year internship in [iAR Soft](https://www.iar-soft.com/).
+This project consists in a Metric Collection System for a database to monitor
+the data. It's developped as part of my first year internship in
+[iAR Soft](https://www.iar-soft.com/).
 
 # API Endpoints
 
@@ -8,8 +10,10 @@ This project consists in a Metric Collection System for a database to monitor th
 |-|-|-|
 |`GET`|`/v1/healthcheck`|Get the health status of the API|
 |`GET`|`/v1/hello`|Get "hello world" message|
-|`GET`|`/v1/metrics`|Get a list of metrics|
-|`GET`|`/v1/metrics/:name`|Get a metric by name|
+|`GET`|`/v1/metrics/opcounters`|Get a list of operation counters|
+|`GET`|`/v1/metrics/opcounters/:name`|Get an operation counter by name|
+|`GET`|`/v1/metrics/cpu`|Get the CPU usage in 1 second|
+|`GET`|`/v1/metrics/ram`|Get the RAM usage|
 
 # Usage
 
@@ -21,6 +25,20 @@ git clone https://github.com/SrVariable/mongo-exporter
 Navigate to the project folder
 ```
 cd mongo-exporter
+```
+
+Create `.env` file following the `.env.example` file to configure the environment
+variables. For default configuration, just copy `.env.example` to `.env`:
+```
+cp .env.example .env
+```
+
+`.env` file should look like this:
+```
+APP_PORT=8080
+DB_NAME=MyDatabaseName
+DB_HOST=mongo
+DB_PORT=27017
 ```
 
 Build the containers
@@ -36,16 +54,17 @@ make
 > docker compose up --build -d
 > ```
 
-Once it's built, you can interact with the API using your browser, curl, or any method you prefer.
+Once it's built, you can interact with the API using your browser, curl, or
+any method you prefer.
 
 - To get a list of metrics:
 ```
-curl localhost:8080/v1/metrics
+curl http://localhost:8080/v1/metrics
 ```
 
 - To get the amount of inserts to a database
 ```
-curl localhost:8080/v1/metrics/insert
+curl http://localhost:8080/v1/metrics/insert
 ```
 
 Check [API Endpoints](#api-endpoints) to see available endpoints.

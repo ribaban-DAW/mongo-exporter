@@ -1,8 +1,7 @@
-package api
+package router
 
 import (
-	"github.com/SrVariable/mongo-exporter/internal/hello"
-
+	"github.com/SrVariable/mongo-exporter/api/hello"
 	"github.com/gin-gonic/gin"
 )
 
