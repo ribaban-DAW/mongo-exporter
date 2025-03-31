@@ -1,6 +1,10 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+
+	"github.com/gin-gonic/gin"
+)
 
 func Run(uri string) (err error) {
 	router := setupRouter()
@@ -10,6 +14,7 @@ func Run(uri string) (err error) {
 func setupRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+	log.Println("Created router")
 
 	v1 := router.Group("/v1")
 

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func (dr *DatabaseRepository) GetCpuUsage(c context.Context) ([]domain.Metric, error) {
@@ -20,7 +20,7 @@ func (dr *DatabaseRepository) GetCpuUsage(c context.Context) ([]domain.Metric, e
 
 	extraInfo, ok := serverStatus["extra_info"].(bson.M)
 	if !ok {
-		return nil, errors.New("wrong type")
+		return nil, errors.New("`extraInfo` type assertion failed")
 	}
 	userTime := extraInfo["user_time_us"]
 	metrics = append(
@@ -42,4 +42,3 @@ func (dr *DatabaseRepository) GetCpuUsage(c context.Context) ([]domain.Metric, e
 	)
 	return metrics, nil
 }
-

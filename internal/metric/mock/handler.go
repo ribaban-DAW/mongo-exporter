@@ -3,8 +3,8 @@ package mock
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/SrVariable/mongo-exporter/internal/metric/service"
+	"github.com/gin-gonic/gin"
 )
 
 func GetOpCountersHandlerMock(ms service.MetricService, c *gin.Context) {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"runtime"
 	"strconv"
 	"time"
@@ -16,20 +17,20 @@ func calculateCpuUsage(metricsStart, metricsEnd []domain.Metric, elapsedSecs flo
 	// Type casting
 	userTimeStart, err := strconv.ParseInt(metricsStart[0].Value, 10, 64)
 	if err != nil {
-		return 0, errors.New("couldn't convert userTimeStart")
+		return 0, errors.New("couldn't convert userTimeStart to int")
 	}
 	userTimeEnd, err := strconv.ParseInt(metricsEnd[0].Value, 10, 64)
 	if err != nil {
-		return 0, errors.New("couldn't convert userTimeEnd")
+		return 0, errors.New("couldn't convert userTimeEnd to int")
 	}
 
 	systemTimeStart, err := strconv.ParseInt(metricsStart[1].Value, 10, 64)
 	if err != nil {
-		return 0, errors.New("couldn't convert systemTimeStart")
+		return 0, errors.New("couldn't convert systemTimeStart to int")
 	}
 	systemTimeEnd, err := strconv.ParseInt(metricsEnd[1].Value, 10, 64)
 	if err != nil {
-		return 0, errors.New("couldn't convert systemTimeEnd")
+		return 0, errors.New("couldn't convert systemTimeEnd to int")
 	}
 
 	// Calculation
@@ -45,6 +46,7 @@ func (ms *metricService) FindCpuUsage(c context.Context) (*domain.Metric, error)
 
 	metricsStart, err := ms.repo.GetCpuUsage(c)
 	if err != nil {
+		log.Printf("Error getting metricsStart. Reason: %v", err)
 		return nil, err
 	}
 
@@ -52,11 +54,13 @@ func (ms *metricService) FindCpuUsage(c context.Context) (*domain.Metric, error)
 
 	metricsEnd, err := ms.repo.GetCpuUsage(c)
 	if err != nil {
+		log.Printf("Error getting metricsEnd. Reason: %v", err)
 		return nil, err
 	}
 
 	cpuUsage, err := calculateCpuUsage(metricsStart, metricsEnd, elapsedSecs)
 	if err != nil {
+		log.Printf("Error calculating CPU usage. Reason: %v", err)
 		return nil, err
 	}
 	metric := domain.Metric{
@@ -64,5 +68,6 @@ func (ms *metricService) FindCpuUsage(c context.Context) (*domain.Metric, error)
 		Value:     fmt.Sprintf("%.2f%%", cpuUsage),
 		Timestamp: time.Now(),
 	}
+	log.Println("Found CPU usage")
 	return &metric, nil
 }

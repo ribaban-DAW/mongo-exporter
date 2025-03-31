@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"github.com/SrVariable/mongo-exporter/internal/metric/mock"
+	"github.com/SrVariable/mongo-exporter/internal/metric/service"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
-	"github.com/SrVariable/mongo-exporter/internal/metric/service"
-	"github.com/SrVariable/mongo-exporter/internal/metric/mock"
 )
 
 func TestGetOpCounters(t *testing.T) {

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func (dr *DatabaseRepository) GetRamUsage(c context.Context) (*domain.Metric, error) {
@@ -18,7 +18,7 @@ func (dr *DatabaseRepository) GetRamUsage(c context.Context) (*domain.Metric, er
 
 	mem, ok := serverStatus["mem"].(bson.M)
 	if !ok {
-		return nil, errors.New("wrong type")
+		return nil, errors.New("`mem` type assertion failed")
 	}
 	resident := mem["resident"]
 

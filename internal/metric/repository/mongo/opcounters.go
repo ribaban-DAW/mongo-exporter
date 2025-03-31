@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func (dr *DatabaseRepository) GetOpCounters(c context.Context) ([]domain.Metric, error) {
@@ -42,12 +42,12 @@ func (dr *DatabaseRepository) GetOpCounterByName(c context.Context, name string)
 
 	opcounters, ok := serverStatus["opcounters"].(bson.M)
 	if !ok {
-		return nil, errors.New("wrong type")
+		return nil, errors.New("`opcounters` type assertion failed")
 	}
 
 	value, ok := opcounters[name]
 	if !ok {
-		return nil, errors.New("metric not found")
+		return nil, fmt.Errorf("metric `%s` not found", name)
 	}
 
 	metric := domain.Metric{
