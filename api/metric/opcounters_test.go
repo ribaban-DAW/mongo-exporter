@@ -8,7 +8,8 @@ import (
 	"time"
 
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
-	"github.com/SrVariable/mongo-exporter/internal/metric/mock"
+	mockrepo "github.com/SrVariable/mongo-exporter/internal/metric/mock/repository"
+	mockserv "github.com/SrVariable/mongo-exporter/internal/metric/mock/service"
 	"github.com/SrVariable/mongo-exporter/internal/metric/service"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -25,11 +26,11 @@ func TestGetOpCounters(t *testing.T) {
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := mock.NewMockRepository(metrics)
+	repo := mockrepo.NewMockRepository(metrics)
 	service := service.NewMetricService(repo)
 
-	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	mock.GetOpCountersHandlerMock(service, c)
+	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics/opcounters", nil)
+	mockserv.GetOpCountersHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics
@@ -57,11 +58,11 @@ func TestGetOpCounterByName_Insert(t *testing.T) {
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := mock.NewMockRepository(metrics)
+	repo := mockrepo.NewMockRepository(metrics)
 	service := service.NewMetricService(repo)
 
-	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	mock.GetOpCounterByNameHandlerMock(service, c)
+	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics/opcounters/insert", nil)
+	mockserv.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[0]
@@ -85,11 +86,11 @@ func TestGetOpCounterByName_Delete(t *testing.T) {
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := mock.NewMockRepository(metrics)
+	repo := mockrepo.NewMockRepository(metrics)
 	service := service.NewMetricService(repo)
 
-	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	mock.GetOpCounterByNameHandlerMock(service, c)
+	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics/opcounters/delete", nil)
+	mockserv.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[1]
@@ -113,11 +114,11 @@ func TestGetOpCounterByName_Query(t *testing.T) {
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := mock.NewMockRepository(metrics)
+	repo := mockrepo.NewMockRepository(metrics)
 	service := service.NewMetricService(repo)
 
-	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	mock.GetOpCounterByNameHandlerMock(service, c)
+	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics/opcounters/query", nil)
+	mockserv.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[2]
@@ -141,11 +142,11 @@ func TestGetOpCounterByName_Update(t *testing.T) {
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := mock.NewMockRepository(metrics)
+	repo := mockrepo.NewMockRepository(metrics)
 	service := service.NewMetricService(repo)
 
-	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	mock.GetOpCounterByNameHandlerMock(service, c)
+	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics/opcounters/update", nil)
+	mockserv.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	want := metrics[3]
@@ -169,11 +170,11 @@ func TestGetOpCounterByName_Empty(t *testing.T) {
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := mock.NewMockRepository(metrics)
+	repo := mockrepo.NewMockRepository(metrics)
 	service := service.NewMetricService(repo)
 
-	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	mock.GetOpCounterByNameHandlerMock(service, c)
+	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics/opcounters/", nil)
+	mockserv.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
 	want := gin.H{"message": "metric not found"}
@@ -196,11 +197,11 @@ func TestGetOpCounterByName_NoExist(t *testing.T) {
 		{Name: "update", Value: "4", Timestamp: time.Now()},
 	}
 
-	repo := mock.NewMockRepository(metrics)
+	repo := mockrepo.NewMockRepository(metrics)
 	service := service.NewMetricService(repo)
 
-	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics", nil)
-	mock.GetOpCounterByNameHandlerMock(service, c)
+	c.Request, _ = http.NewRequest(http.MethodGet, "/metrics/opcounters/foo", nil)
+	mockserv.GetOpCounterByNameHandlerMock(service, c)
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
 	want := gin.H{"message": "metric not found"}

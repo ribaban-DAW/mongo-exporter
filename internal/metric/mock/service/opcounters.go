@@ -1,4 +1,4 @@
-package mock
+package service
 
 import (
 	"net/http"
@@ -16,8 +16,6 @@ func GetOpCountersHandlerMock(ms service.MetricService, c *gin.Context) {
 	c.JSON(http.StatusOK, m)
 }
 
-// Same as GetMetricByNameHandler and used for testing purposes.
-// It receives the context as parameter and doesn't return anything.
 func GetOpCounterByNameHandlerMock(ms service.MetricService, c *gin.Context) {
 	name := c.Param("name")
 	m, err := ms.FindOpCounterByName(c.Request.Context(), name)
