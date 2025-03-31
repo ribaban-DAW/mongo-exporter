@@ -34,6 +34,6 @@ func (mr *MockRepository) GetCpuUsage(c context.Context) ([]domain.Metric, error
 	return nil, errors.New("not implemented yet")
 }
 
-func (mr *MockRepository) GetRamUsage(c context.Context) (*domain.Metric, error) {
+func (mr *MockRepository) GetRamUsage(c context.Context) ([]domain.Metric, error) {
 	return nil, errors.New("not implemented yet")
 }

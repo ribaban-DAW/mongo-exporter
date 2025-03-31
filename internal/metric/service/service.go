@@ -10,8 +10,8 @@ import (
 type MetricService interface {
 	FindOpCounters(c context.Context) ([]domain.Metric, error)
 	FindOpCounterByName(c context.Context, name string) (*domain.Metric, error)
-	FindCpuUsage(c context.Context) (*domain.Metric, error)
-	FindRamUsage(c context.Context) (*domain.Metric, error)
+	FindCpuUsage(c context.Context) ([]domain.Metric, error)
+	FindRamUsage(c context.Context) ([]domain.Metric, error)
 }
 
 type metricService struct {

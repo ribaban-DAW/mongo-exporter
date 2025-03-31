@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"runtime"
 	"strconv"
 	"time"
 
@@ -13,61 +12,39 @@ import (
 )
 
 // NOTE: This will be simplified when I implement Value Objects
-func calculateCpuUsage(metricsStart, metricsEnd []domain.Metric, elapsedSecs float64) (float64, error) {
+func CalculateCpuUsage(metricsStart []domain.Metric) (int64, error) {
 	// Type casting
-	userTimeStart, err := strconv.ParseInt(metricsStart[0].Value, 10, 64)
+	userTime, err := strconv.ParseInt(metricsStart[0].Value, 10, 64)
 	if err != nil {
 		return 0, errors.New("couldn't convert userTimeStart to int")
 	}
-	userTimeEnd, err := strconv.ParseInt(metricsEnd[0].Value, 10, 64)
-	if err != nil {
-		return 0, errors.New("couldn't convert userTimeEnd to int")
-	}
-
-	systemTimeStart, err := strconv.ParseInt(metricsStart[1].Value, 10, 64)
+	systemTime, err := strconv.ParseInt(metricsStart[1].Value, 10, 64)
 	if err != nil {
 		return 0, errors.New("couldn't convert systemTimeStart to int")
 	}
-	systemTimeEnd, err := strconv.ParseInt(metricsEnd[1].Value, 10, 64)
-	if err != nil {
-		return 0, errors.New("couldn't convert systemTimeEnd to int")
-	}
 
-	// Calculation
-	deltaTotalTime := (userTimeEnd - userTimeStart) + (systemTimeEnd - systemTimeStart)
-	elapsedMicrosecs := elapsedSecs * 1000000.0
-	cpuUsage := (float64(deltaTotalTime) / elapsedMicrosecs) / float64(runtime.NumCPU()) * 100.0
-
-	return cpuUsage, nil
+	totalTime := userTime + systemTime
+	return totalTime, nil
 }
 
-func (ms *metricService) FindCpuUsage(c context.Context) (*domain.Metric, error) {
-	elapsedSecs := 1.0
-
-	metricsStart, err := ms.repo.GetCpuUsage(c)
+func (ms *metricService) FindCpuUsage(c context.Context) ([]domain.Metric, error) {
+	metrics, err := ms.repo.GetCpuUsage(c)
 	if err != nil {
-		log.Printf("Error getting metricsStart. Reason: %v", err)
+		log.Printf("Error getting CPU usage. Reason: %v", err)
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(elapsedSecs) * time.Second)
-
-	metricsEnd, err := ms.repo.GetCpuUsage(c)
-	if err != nil {
-		log.Printf("Error getting metricsEnd. Reason: %v", err)
-		return nil, err
-	}
-
-	cpuUsage, err := calculateCpuUsage(metricsStart, metricsEnd, elapsedSecs)
+	totalTime, err := CalculateCpuUsage(metrics)
 	if err != nil {
 		log.Printf("Error calculating CPU usage. Reason: %v", err)
 		return nil, err
 	}
 	metric := domain.Metric{
-		Name:      "usage",
-		Value:     fmt.Sprintf("%.2f%%", cpuUsage),
+		Name:      "totalTime",
+		Value:     fmt.Sprintf("%d", totalTime),
 		Timestamp: time.Now(),
 	}
+	metrics = append(metrics, metric)
 	log.Println("Found CPU usage")
-	return &metric, nil
+	return metrics, nil
 }
