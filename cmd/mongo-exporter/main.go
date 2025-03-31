@@ -1,20 +1,27 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"time"
 
+	"github.com/SrVariable/mongo-exporter/config"
 	"github.com/SrVariable/mongo-exporter/internal/database/mongo"
 	"github.com/SrVariable/mongo-exporter/router"
 )
 
-// TODO: Abstract the database more so I only have to db.Connect() and db.Disconect()
 func main() {
-	db := mongo.GetInstance()
+	env, err := config.NewEnv()
+	if err != nil {
+		return
+	}
+
+	context, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+
+	db := mongo.NewDatabase(context, cancel, env)
 	if err := db.Connect(); err != nil {
-		fmt.Println(err)
 		return
 	}
 	defer db.Disconnect()
 
-	router.Run(":8080")
+	router.Run(env)
 }

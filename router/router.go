@@ -3,11 +3,13 @@ package router
 import (
 	"log"
 
+	"github.com/SrVariable/mongo-exporter/config"
 	"github.com/gin-gonic/gin"
 )
 
-func Run(uri string) (err error) {
+func Run(env *config.Env) (err error) {
 	router := setupRouter()
+	uri := ":" + env.AppPort
 	return router.Run(uri)
 }
 
