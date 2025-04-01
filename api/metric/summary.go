@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetSummaryHandler(ms service.MetricService) gin.HandlerFunc {
+func GetSummaryHandler(ms *service.MetricService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(
 			http.StatusOK,

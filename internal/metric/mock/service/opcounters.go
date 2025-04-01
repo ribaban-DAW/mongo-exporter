@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetOpCountersHandlerMock(ms service.MetricService, c *gin.Context) {
+func GetOpCountersHandlerMock(ms *service.MetricService, c *gin.Context) {
 	m, err := ms.FindOpCounters(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
@@ -16,7 +16,7 @@ func GetOpCountersHandlerMock(ms service.MetricService, c *gin.Context) {
 	c.JSON(http.StatusOK, m)
 }
 
-func GetOpCounterByNameHandlerMock(ms service.MetricService, c *gin.Context) {
+func GetOpCounterByNameHandlerMock(ms *service.MetricService, c *gin.Context) {
 	name := c.Param("name")
 	m, err := ms.FindOpCounterByName(c.Request.Context(), name)
 	if err != nil {

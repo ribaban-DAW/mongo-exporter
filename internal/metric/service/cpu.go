@@ -27,7 +27,7 @@ func CalculateCpuUsage(metricsStart []domain.Metric) (int64, error) {
 	return totalTime, nil
 }
 
-func (ms *metricService) FindCpuUsage(c context.Context) ([]domain.Metric, error) {
+func (ms *MetricService) FindCpuUsage(c context.Context) ([]domain.Metric, error) {
 	metrics, err := ms.repo.GetCpuUsage(c)
 	if err != nil {
 		log.Printf("Error getting CPU usage. Reason: %v", err)

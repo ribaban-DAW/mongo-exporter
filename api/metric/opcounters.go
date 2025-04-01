@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetOpCountersHandler(ms service.MetricService) gin.HandlerFunc {
+func GetOpCountersHandler(ms *service.MetricService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		m, err := ms.FindOpCounters(c.Request.Context())
 		if err != nil {
@@ -18,7 +18,7 @@ func GetOpCountersHandler(ms service.MetricService) gin.HandlerFunc {
 	}
 }
 
-func GetOpCounterByNameHandler(ms service.MetricService) gin.HandlerFunc {
+func GetOpCounterByNameHandler(ms *service.MetricService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		name := c.Param("name")
 		m, err := ms.FindOpCounterByName(c.Request.Context(), name)

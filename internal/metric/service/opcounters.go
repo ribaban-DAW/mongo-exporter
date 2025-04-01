@@ -7,7 +7,7 @@ import (
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
 )
 
-func (ms *metricService) FindOpCounters(c context.Context) ([]domain.Metric, error) {
+func (ms *MetricService) FindOpCounters(c context.Context) ([]domain.Metric, error) {
 	ocs, err := ms.repo.GetOpCounters(c)
 	if err != nil {
 		log.Printf("Error getting opcounters. Reason: %v", err)
@@ -17,7 +17,7 @@ func (ms *metricService) FindOpCounters(c context.Context) ([]domain.Metric, err
 	return ocs, nil
 }
 
-func (ms *metricService) FindOpCounterByName(c context.Context, name string) (*domain.Metric, error) {
+func (ms *MetricService) FindOpCounterByName(c context.Context, name string) (*domain.Metric, error) {
 	oc, err := ms.repo.GetOpCounterByName(c, name)
 	if err != nil {
 		log.Printf("Error getting opcounter by name. Reason: %v", err)

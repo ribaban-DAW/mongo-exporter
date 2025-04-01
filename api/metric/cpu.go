@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetCpuUsageHandler(ms service.MetricService) gin.HandlerFunc {
+func GetCpuUsageHandler(ms *service.MetricService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		m, err := ms.FindCpuUsage(c.Request.Context())
 		if err != nil {

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetRamUsageHandler(ms service.MetricService) gin.HandlerFunc {
+func GetRamUsageHandler(ms *service.MetricService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		m, err := ms.FindRamUsage(c.Request.Context())
 		if err != nil {

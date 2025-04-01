@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetRamUsageHandlerMock(ms service.MetricService, c *gin.Context) {
+func GetRamUsageHandlerMock(ms *service.MetricService, c *gin.Context) {
 	m, err := ms.FindRamUsage(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
