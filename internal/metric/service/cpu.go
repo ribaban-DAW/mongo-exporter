@@ -3,48 +3,45 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
 )
 
-// NOTE: This will be simplified when I implement Value Objects
-func CalculateCpuUsage(metricsStart []domain.Metric) (int64, error) {
-	// Type casting
-	userTime, err := strconv.ParseInt(metricsStart[0].Value, 10, 64)
-	if err != nil {
-		return 0, errors.New("couldn't convert userTimeStart to int")
-	}
-	systemTime, err := strconv.ParseInt(metricsStart[1].Value, 10, 64)
-	if err != nil {
-		return 0, errors.New("couldn't convert systemTimeStart to int")
+func calculateTotalTime(cpu *value_object.Cpu) (int64, error) {
+	userTime, ok := cpu.UserTime.Value.(int64)
+	if !ok {
+		return 0, errors.New("`userTime` type assertion failed")
 	}
 
-	totalTime := userTime + systemTime
-	return totalTime, nil
+	systemTime, ok := cpu.SystemTime.Value.(int64)
+	if !ok {
+		return 0, errors.New("`systemType` type assertion failed")
+	}
+
+	return userTime + systemTime, nil
 }
 
-func (ms *MetricService) FindCpuUsage(c context.Context) ([]domain.Metric, error) {
-	metrics, err := ms.repo.GetCpuUsage(c)
+func (ms *MetricService) FindCpu(c context.Context) (*value_object.Cpu, error) {
+	cpu, err := ms.repo.GetCpu(c)
 	if err != nil {
-		log.Printf("Error getting CPU usage. Reason: %v", err)
+		log.Printf("Error finding CPU. Reason: %v", err)
 		return nil, err
 	}
 
-	totalTime, err := CalculateCpuUsage(metrics)
+	totalTime, err := calculateTotalTime(cpu)
 	if err != nil {
-		log.Printf("Error calculating CPU usage. Reason: %v", err)
+		log.Printf("Error calculating totalTime. Reason: %v", err)
 		return nil, err
 	}
-	metric := domain.Metric{
-		Name:      "totalTime",
-		Value:     fmt.Sprintf("%d", totalTime),
+
+	// NOTE: This isn't calculated in repository because it's not part of MongoDB stats
+	cpu.TotalTime = domain.Metric{
+		Value:     totalTime,
 		Timestamp: time.Now(),
 	}
-	metrics = append(metrics, metric)
-	log.Println("Found CPU usage")
-	return metrics, nil
+	log.Println("Found CPU")
+	return cpu, nil
 }

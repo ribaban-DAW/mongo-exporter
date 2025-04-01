@@ -27,18 +27,18 @@ func addMetricRoutes(rg *gin.RouterGroup) {
 	})
 	log.Println("Added route /metrics/opcounters")
 
-	m.GET("/opcounters/:name", func(c *gin.Context) {
-		metric.GetOpCounterByNameHandler(service)(c)
-	})
-	log.Println("Added route /metrics/opcounters/:name")
-
 	m.GET("/cpu", func(c *gin.Context) {
-		metric.GetCpuUsageHandler(service)(c)
+		metric.GetCpuHandler(service)(c)
 	})
 	log.Println("Added route /metrics/cpu")
 
 	m.GET("/ram", func(c *gin.Context) {
-		metric.GetRamUsageHandler(service)(c)
+		metric.GetRamHandler(service)(c)
 	})
 	log.Println("Added route /metrics/ram")
+
+	m.GET("/connections", func(c *gin.Context) {
+		metric.GetConnectionsHandler(service)(c)
+	})
+	log.Println("Added route /metrics/connections")
 }

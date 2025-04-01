@@ -4,15 +4,15 @@ import (
 	"context"
 	"log"
 
-	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
 )
 
-func (ms *MetricService) FindRamUsage(c context.Context) ([]domain.Metric, error) {
-	metrics, err := ms.repo.GetRamUsage(c)
+func (ms *MetricService) FindRam(c context.Context) (*value_object.Ram, error) {
+	ram, err := ms.repo.GetRam(c)
 	if err != nil {
-		log.Printf("Error getting RAM usage. Reason: %v", err)
+		log.Printf("Error finding RAM. Reason: %v", err)
 		return nil, err
 	}
-	log.Printf("Found RAM usage")
-	return metrics, nil
+	log.Println("Found RAM")
+	return ram, nil
 }

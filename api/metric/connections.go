@@ -7,9 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetRamHandler(ms *service.MetricService) gin.HandlerFunc {
+func GetConnectionsHandler(ms *service.MetricService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		m, err := ms.FindRam(c.Request.Context())
+		m, err := ms.FindConnections(c.Request.Context())
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
 			return

@@ -6,34 +6,38 @@ the data. It's developped as part of my first year internship in
 
 # API Endpoints
 
-|Method|Endpoint|Description|
-|-|-|-|
-|`GET`|`/v1/healthcheck`|Get the health status of the API|
-|`GET`|`/v1/hello`|Get "hello world" message|
-|`GET`|`/v1/metrics/opcounters`|Get a list of operation counters|
-|`GET`|`/v1/metrics/opcounters/:name`|Get an operation counter by name|
-|`GET`|`/v1/metrics/cpu`|Get the CPU usage|
-|`GET`|`/v1/metrics/ram`|Get the RAM usage|
+| Method | Endpoint                  | Description                        |
+| ------ | ------------------------- | ---------------------------------- |
+| `GET`  | `/v1/healthcheck`         | Get the health status of the API   |
+| `GET`  | `/v1/hello`               | Get "hello world" message          |
+| `GET`  | `/v1/metrics/connections` | Get metrics related to connections |
+| `GET`  | `/v1/metrics/cpu`         | Get metrics related to CPU         |
+| `GET`  | `/v1/metrics/opcounters`  | Get metrics related to operations  |
+| `GET`  | `/v1/metrics/ram`         | Get metrics related to RAM         |
 
 # Usage
 
 Clone the repository
+
 ```
 git clone https://github.com/SrVariable/mongo-exporter
 ```
 
 Navigate to the project folder
+
 ```
 cd mongo-exporter
 ```
 
 Create `.env` file following the `.env.example` file to configure the environment
 variables. For default configuration, just copy `.env.example` to `.env`:
+
 ```
 cp .env.example .env
 ```
 
 `.env` file should look like this:
+
 ```
 APP_PORT=8080
 DB_NAME=MyDatabaseName
@@ -42,6 +46,7 @@ DB_PORT=27017
 ```
 
 Build the containers
+
 ```
 make
 ```
@@ -49,6 +54,7 @@ make
 > [!NOTE]
 >
 > If you don't have `make`, you can run:
+>
 > ```
 > docker compose down
 > docker compose up --build -d
@@ -57,14 +63,10 @@ make
 Once it's built, you can interact with the API using your browser, curl, or
 any method you prefer.
 
-- To get a list of metrics:
-```
-curl http://localhost:8080/v1/metrics
-```
+- To get metrics related to CPU:
 
-- To get the amount of inserts to a database
 ```
-curl http://localhost:8080/v1/metrics/insert
+curl http://localhost:8080/v1/metrics/cpu
 ```
 
 Check [API Endpoints](#api-endpoints) to see available endpoints.
