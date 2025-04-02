@@ -1,7 +1,7 @@
 # mongo-exporter
 
 This project consists in a Metric Collection System for a database to monitor
-the data. It's developped as part of my first year internship in
+the data. It's developed as part of my first year internship in
 [iAR Soft](https://www.iar-soft.com/).
 
 # API Endpoints
