@@ -3,66 +3,45 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
-	"runtime"
-	"strconv"
+	"log"
 	"time"
 
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
 )
 
-// NOTE: This will be simplified when I implement Value Objects
-func calculateCpuUsage(metricsStart, metricsEnd []domain.Metric, elapsedSecs float64) (float64, error) {
-	// Type casting
-	userTimeStart, err := strconv.ParseInt(metricsStart[0].Value, 10, 64)
-	if err != nil {
-		return 0, errors.New("couldn't convert userTimeStart")
-	}
-	userTimeEnd, err := strconv.ParseInt(metricsEnd[0].Value, 10, 64)
-	if err != nil {
-		return 0, errors.New("couldn't convert userTimeEnd")
+func calculateTotalTime(cpu *value_object.Cpu) (int64, error) {
+	userTime, ok := cpu.UserTime.Value.(int64)
+	if !ok {
+		return 0, errors.New("`userTime` type assertion failed")
 	}
 
-	systemTimeStart, err := strconv.ParseInt(metricsStart[1].Value, 10, 64)
-	if err != nil {
-		return 0, errors.New("couldn't convert systemTimeStart")
-	}
-	systemTimeEnd, err := strconv.ParseInt(metricsEnd[1].Value, 10, 64)
-	if err != nil {
-		return 0, errors.New("couldn't convert systemTimeEnd")
+	systemTime, ok := cpu.SystemTime.Value.(int64)
+	if !ok {
+		return 0, errors.New("`systemType` type assertion failed")
 	}
 
-	// Calculation
-	deltaTotalTime := (userTimeEnd - userTimeStart) + (systemTimeEnd - systemTimeStart)
-	elapsedMicrosecs := elapsedSecs * 1000000.0
-	cpuUsage := (float64(deltaTotalTime) / elapsedMicrosecs) / float64(runtime.NumCPU()) * 100.0
-
-	return cpuUsage, nil
+	return userTime + systemTime, nil
 }
 
-func (ms *metricService) FindCpuUsage(c context.Context) (*domain.Metric, error) {
-	elapsedSecs := 1.0
-
-	metricsStart, err := ms.repo.GetCpuUsage(c)
+func (ms *MetricService) FindCpu(c context.Context) (*value_object.Cpu, error) {
+	cpu, err := ms.repo.GetCpu(c)
 	if err != nil {
+		log.Printf("Error finding CPU. Reason: %v", err)
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(elapsedSecs) * time.Second)
-
-	metricsEnd, err := ms.repo.GetCpuUsage(c)
+	totalTime, err := calculateTotalTime(cpu)
 	if err != nil {
+		log.Printf("Error calculating totalTime. Reason: %v", err)
 		return nil, err
 	}
 
-	cpuUsage, err := calculateCpuUsage(metricsStart, metricsEnd, elapsedSecs)
-	if err != nil {
-		return nil, err
-	}
-	metric := domain.Metric{
-		Name:      "usage",
-		Value:     fmt.Sprintf("%.2f%%", cpuUsage),
+	// NOTE: This isn't calculated in repository because it's not part of MongoDB stats
+	cpu.TotalTime = domain.Metric{
+		Value:     totalTime,
 		Timestamp: time.Now(),
 	}
-	return &metric, nil
+	log.Println("Found CPU")
+	return cpu, nil
 }

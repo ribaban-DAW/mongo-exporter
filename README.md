@@ -7,23 +7,25 @@ primer año en el Grado Superior de Desarrollo de Aplicaciones Web en la empresa
 
 # API Endpoints
 
-|Método|Endpoint|Descripción|
-|-|-|-|
-|`GET`|`/v1/healthcheck`|Obtener el estado de la API|
-|`GET`|`/v1/hello`|Obtener el mensaje "hello world"|
-|`GET`|`/v1/metrics/opcounters`|Obtener una lista de contador de operaciones|
-|`GET`|`/v1/metrics/opcounters/:name`|Obtener un contandor de operación por nombre|
-|`GET`|`/v1/metrics/cpu`|Obtener el uso de CPU en 1 segundo|
-|`GET`|`/v1/metrics/ram`|Obtener el uso de RAM|
+| Método | Endpoint                  | Descripción                                   |
+| ------ | ------------------------- | --------------------------------------------- |
+| `GET`  | `/v1/healthcheck`         | Obtener el estado de la API                   |
+| `GET`  | `/v1/hello`               | Obtener el mensaje "hello world"              |
+| `GET`  | `/v1/metrics/connections` | Obtener métricas relacionadas con conexiones  |
+| `GET`  | `/v1/metrics/cpu`         | Obtener métricas relacionadas con CPU         |
+| `GET`  | `/v1/metrics/opcounters`  | Obtener métricas relacionadas con operaciones |
+| `GET`  | `/v1/metrics/ram`         | Obtener métricas relacionadas con RAM         |
 
 # Uso
 
 Clona el repositorio:
+
 ```
 git clone https://github.com/SrVariable/mongo-exporter
 ```
 
 Navega al directorio del proyecto:
+
 ```
 cd mongo-exporter
 ```
@@ -31,11 +33,13 @@ cd mongo-exporter
 Crea el archivo `.env` siguiendo el `.env.example` para configurar las
 variables de entorno. Para la configuración por defecto, copia `.env.example` a
 `.env`:
+
 ```
 cp .env.example .env
 ```
 
 El `.env` debería ser similar a esto:
+
 ```
 APP_PORT=8080
 DB_NAME=MyDatabaseName
@@ -44,6 +48,7 @@ DB_PORT=27017
 ```
 
 Construye los contenedores:
+
 ```
 make
 ```
@@ -51,6 +56,7 @@ make
 > [!NOTE]
 >
 > Si no tienes `make`, puedes ejecutar:
+>
 > ```
 > docker compose down
 > docker compose up --build -d
@@ -59,14 +65,10 @@ make
 Una vez esté construido, puedes interactuar con la API utilizando tu navegador,
 curl o cualquier otro método que prefieras.
 
-- Para obtener una lista de métricas:
-```
-curl http://localhost:8080/v1/metrics
-```
+- Para obtener métricas relacionadas con CPU
 
-- Para obtener el número de inserts a la base de datos
 ```
-curl http://localhost:8080/v1/metrics/insert
+curl http://localhost:8080/v1/metrics/cpu
 ```
 
 Revisa [API Endpoints](#api-endpoints) para ver los endpoints disponibles.

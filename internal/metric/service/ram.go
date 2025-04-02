@@ -2,16 +2,17 @@ package service
 
 import (
 	"context"
+	"log"
 
-	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
 )
 
-func (ms *metricService) FindRamUsage(c context.Context) (*domain.Metric, error) {
-	metric, err := ms.repo.GetRamUsage(c)
+func (ms *MetricService) FindRam(c context.Context) (*value_object.Ram, error) {
+	ram, err := ms.repo.GetRam(c)
 	if err != nil {
+		log.Printf("Error finding RAM. Reason: %v", err)
 		return nil, err
 	}
-	metric.Name = "usage"
-	metric.Value = metric.Value + " MiB"
-	return metric, nil
+	log.Println("Found RAM")
+	return ram, nil
 }

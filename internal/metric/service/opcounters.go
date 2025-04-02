@@ -2,14 +2,17 @@ package service
 
 import (
 	"context"
+	"log"
 
-	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
 )
 
-func (ms *metricService) FindOpCounters(c context.Context) ([]domain.Metric, error) {
-	return ms.repo.GetOpCounters(c)
-}
-
-func (ms *metricService) FindOpCounterByName(c context.Context, name string) (*domain.Metric, error) {
-	return ms.repo.GetOpCounterByName(c, name)
+func (ms *MetricService) FindOpCounters(c context.Context) (*value_object.OpCounters, error) {
+	opcounters, err := ms.repo.GetOpCounters(c)
+	if err != nil {
+		log.Printf("Error finding OpCounters. Reason: %v", err)
+		return nil, err
+	}
+	log.Println("Found OpCounters")
+	return opcounters, nil
 }

@@ -2,72 +2,46 @@ package mongo
 
 import (
 	"context"
-	"errors"
-	"fmt"
-	"os"
-	"time"
 
-	"github.com/joho/godotenv"
+	"github.com/SrVariable/mongo-exporter/config"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type dbConfig struct {
+	Host string
+	Port string
+}
+
 type database struct {
-	Client *mongo.Client
-	Ctx    context.Context
-	Cancel context.CancelFunc
+	Cancel  context.CancelFunc
+	Context context.Context
+	Client  *mongo.Client
+	Config  dbConfig
 }
 
 var singleInstance *database
 
-func GetInstance() *database {
+func NewDatabase(context context.Context, cancel context.CancelFunc, env *config.Env) *database {
 	if singleInstance != nil {
 		return singleInstance
 	}
-	singleInstance = &database{}
+
+	config := dbConfig{
+		Host: env.DBHost,
+		Port: env.DBPort,
+	}
+
+	singleInstance = &database{
+		Context: context,
+		Cancel:  cancel,
+		Config:  config,
+	}
 	return singleInstance
 }
 
-func getUri() (string, error) {
-	godotenv.Load()
-	dbHost := os.Getenv("DB_HOST")
-	if dbHost == "" {
-		return "", errors.New("DB_HOST not set")
+func GetInstance() *database {
+	if singleInstance == nil {
+		panic("Database not initialized")
 	}
-
-	dbPort := os.Getenv("DB_PORT")
-	if dbPort == "" {
-		return "", errors.New("DB_PORT not set")
-	}
-
-	return fmt.Sprintf("mongodb://%s:%s", dbHost, dbPort), nil
-}
-
-func (db *database) Connect() error {
-	uri, err := getUri()
-	if err != nil {
-		return err
-	}
-
-	db.Ctx, db.Cancel = context.WithTimeout(context.Background(), 30*time.Second)
-	client, err := mongo.Connect(db.Ctx, options.Client().ApplyURI(uri))
-	if err != nil {
-		return err
-	}
-
-	if err := client.Ping(db.Ctx, nil); err != nil {
-		return err
-	}
-
-	db.Client = client
-	return nil
-}
-
-func (db *database) Disconnect() {
-	defer db.Cancel()
-	defer func() {
-		if err := db.Client.Disconnect(db.Ctx); err != nil {
-			panic(err)
-		}
-	}()
+	return singleInstance
 }

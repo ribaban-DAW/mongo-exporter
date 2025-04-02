@@ -3,14 +3,14 @@ package mongo
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (dr *DatabaseRepository) GetRamUsage(c context.Context) (*domain.Metric, error) {
+func (dr *DatabaseRepository) GetRam(c context.Context) (*value_object.Ram, error) {
 	serverStatus, err := dr.getServerStatus(c)
 	if err != nil {
 		return nil, err
@@ -18,14 +18,19 @@ func (dr *DatabaseRepository) GetRamUsage(c context.Context) (*domain.Metric, er
 
 	mem, ok := serverStatus["mem"].(bson.M)
 	if !ok {
-		return nil, errors.New("wrong type")
+		return nil, errors.New("`mem` type assertion failed")
 	}
-	resident := mem["resident"]
 
-	metric := domain.Metric{
-		Name:      "resident",
-		Value:     fmt.Sprintf("%d", resident),
-		Timestamp: time.Now(),
+	ram := value_object.Ram{
+		Resident: domain.Metric{
+			Value:     mem["resident"],
+			Timestamp: time.Now(),
+		},
+		Virtual: domain.Metric{
+			Value:     mem["virtual"],
+			Timestamp: time.Now(),
+		},
 	}
-	return &metric, nil
+
+	return &ram, nil
 }

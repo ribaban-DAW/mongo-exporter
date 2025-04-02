@@ -3,57 +3,42 @@ package mongo
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	"github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (dr *DatabaseRepository) GetOpCounters(c context.Context) ([]domain.Metric, error) {
+func (dr *DatabaseRepository) GetOpCounters(c context.Context) (*value_object.OpCounters, error) {
 	serverStatus, err := dr.getServerStatus(c)
 	if err != nil {
 		return nil, err
 	}
 
-	var metrics []domain.Metric
-
-	opcounters, ok := serverStatus["opcounters"].(bson.M)
+	ocs, ok := serverStatus["opcounters"].(bson.M)
 	if !ok {
-		return nil, errors.New("wrong type")
+		return nil, errors.New("`opcounters` type assertion failed")
 	}
-	for metricName, metricValue := range opcounters {
-		metric := domain.Metric{
-			Name:      metricName,
-			Value:     fmt.Sprintf("%d", metricValue),
+
+	opcounters := value_object.OpCounters{
+		Insert: domain.Metric{
+			Value:     ocs["insert"],
 			Timestamp: time.Now(),
-		}
-		metrics = append(metrics, metric)
+		},
+		Query: domain.Metric{
+			Value:     ocs["query"],
+			Timestamp: time.Now(),
+		},
+		Update: domain.Metric{
+			Value:     ocs["update"],
+			Timestamp: time.Now(),
+		},
+		Delete: domain.Metric{
+			Value:     ocs["delete"],
+			Timestamp: time.Now(),
+		},
 	}
 
-	return metrics, nil
-}
-
-func (dr *DatabaseRepository) GetOpCounterByName(c context.Context, name string) (*domain.Metric, error) {
-	serverStatus, err := dr.getServerStatus(c)
-	if err != nil {
-		return nil, err
-	}
-
-	opcounters, ok := serverStatus["opcounters"].(bson.M)
-	if !ok {
-		return nil, errors.New("wrong type")
-	}
-
-	value, ok := opcounters[name]
-	if !ok {
-		return nil, errors.New("metric not found")
-	}
-
-	metric := domain.Metric{
-		Name:      name,
-		Value:     fmt.Sprintf("%d", value),
-		Timestamp: time.Now(),
-	}
-	return &metric, nil
+	return &opcounters, nil
 }
