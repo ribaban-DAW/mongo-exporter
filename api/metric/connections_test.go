@@ -9,7 +9,7 @@ import (
 	mockhand "github.com/SrVariable/mongo-exporter/api/metric/mock"
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
-	mockrepo "github.com/SrVariable/mongo-exporter/internal/metric/mock/repository"
+	mockrepo "github.com/SrVariable/mongo-exporter/internal/metric/repository/mock"
 	"github.com/SrVariable/mongo-exporter/internal/metric/service"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
