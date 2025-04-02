@@ -16,29 +16,29 @@ func (dr *DatabaseRepository) GetConnections(c context.Context) (*value_object.C
 		return nil, err
 	}
 
-	result, ok := serverStatus["connections"].(bson.M)
+	conn, ok := serverStatus["connections"].(bson.M)
 	if !ok {
 		return nil, errors.New("`connections` type assertion failed")
 	}
 
-	connection := value_object.Connections{
+	connections := value_object.Connections{
 		Current: domain.Metric{
-			Value:     result["current"],
+			Value:     conn["current"],
 			Timestamp: time.Now(),
 		},
 		Available: domain.Metric{
-			Value:     result["available"],
+			Value:     conn["available"],
 			Timestamp: time.Now(),
 		},
 		TotalCreated: domain.Metric{
-			Value:     result["totalCreated"],
+			Value:     conn["totalCreated"],
 			Timestamp: time.Now(),
 		},
 		Active: domain.Metric{
-			Value:     result["active"],
+			Value:     conn["active"],
 			Timestamp: time.Now(),
 		},
 	}
 
-	return &connection, nil
+	return &connections, nil
 }

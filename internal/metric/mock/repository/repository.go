@@ -1,15 +1,21 @@
 package repository
 
 import (
-	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
+	vo "github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
 )
 
 type MockRepository struct {
-	Metrics []domain.Metric
+	Connections *vo.Connections
+	Cpu         *vo.Cpu
+	OpCounters  *vo.OpCounters
+	Ram         *vo.Ram
 }
 
-func NewMockRepository(metrics []domain.Metric) *MockRepository {
+func NewMockRepository(connections *vo.Connections, cpu *vo.Cpu, opCounters *vo.OpCounters, ram *vo.Ram) *MockRepository {
 	return &MockRepository{
-		Metrics: metrics,
+		Connections: connections,
+		Cpu:         cpu,
+		OpCounters:  opCounters,
+		Ram:         ram,
 	}
 }

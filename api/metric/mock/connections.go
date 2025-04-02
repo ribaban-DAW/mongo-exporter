@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetCpuUsageHandlerMock(ms *service.MetricService, c *gin.Context) {
-	m, err := ms.FindCpuUsage(c.Request.Context())
+func GetConnectionsHandlerMock(ms *service.MetricService, c *gin.Context) {
+	connections, err := ms.FindConnections(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, m)
+	c.JSON(http.StatusOK, connections)
 }

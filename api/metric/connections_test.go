@@ -15,29 +15,28 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetCpu(t *testing.T) {
+func TestGetConnections(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	cpu := value_object.Cpu{
-		UserTime:   domain.Metric{Value: int64(10000)},
-		SystemTime: domain.Metric{Value: int64(1000)},
+	connections := value_object.Connections{
+		Available:    domain.Metric{Value: int32(10000)},
+		Current:      domain.Metric{Value: int32(50000)},
+		TotalCreated: domain.Metric{Value: int32(100000)},
+		Active:       domain.Metric{Value: int32(300)},
 	}
-
-	repo := mockrepo.NewMockRepository(nil, &cpu, nil, nil)
+	repo := mockrepo.NewMockRepository(&connections, nil, nil, nil)
 	service := service.NewMetricService(repo)
 
-	c.Request, _ = http.NewRequest(http.MethodGet, "/v1/metrics/cpu", nil)
-	mockhand.GetCpuHandlerMock(service, c)
+	c.Request, _ = http.NewRequest(http.MethodGet, "/v1/metrics/connections", nil)
+	mockhand.GetConnectionsHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
-	want := cpu
-	var got value_object.Cpu
+	want := connections
+	var got value_object.Connections
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, want.UserTime.Value, int64(got.UserTime.Value.(float64)))
-	assert.Equal(t, want.SystemTime.Value, int64(got.SystemTime.Value.(float64)))
-	assert.Equal(t, want.TotalTime.Value, int64(got.TotalTime.Value.(float64)))
+	assert.Equal(t, want.Available.Value, int32(got.Available.Value.(float64)))
 }
