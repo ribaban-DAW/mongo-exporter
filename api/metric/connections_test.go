@@ -20,10 +20,10 @@ func TestGetConnections(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 
 	connections := value_object.Connections{
-		Available:    domain.Metric{Value: int32(10000)},
-		Current:      domain.Metric{Value: int32(50000)},
-		TotalCreated: domain.Metric{Value: int32(100000)},
-		Active:       domain.Metric{Value: int32(300)},
+		Available:    domain.Metric[int32]{Value: 10000},
+		Current:      domain.Metric[int32]{Value: 50000},
+		TotalCreated: domain.Metric[int32]{Value: 100000},
+		Active:       domain.Metric[int32]{Value: 300},
 	}
 	repo := mockrepo.NewMockRepository(&connections, nil, nil, nil)
 	service := service.NewMetricService(repo)
@@ -38,5 +38,5 @@ func TestGetConnections(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, want.Available.Value, int32(got.Available.Value.(float64)))
+	assert.Equal(t, want.Available.Value, got.Available.Value)
 }

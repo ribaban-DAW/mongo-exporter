@@ -5,8 +5,8 @@ import (
 )
 
 type Connections struct {
-	Current      domain.Metric `json:"current"`
-	Available    domain.Metric `json:"available"`
-	TotalCreated domain.Metric `json:"totalCreated"`
-	Active       domain.Metric `json:"active"`
+	Current      domain.Metric[int32] `json:"current"`
+	Available    domain.Metric[int32] `json:"available"`
+	TotalCreated domain.Metric[int32] `json:"totalCreated"`
+	Active       domain.Metric[int32] `json:"active"`
 }

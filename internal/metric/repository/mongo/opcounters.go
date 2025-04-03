@@ -21,21 +21,38 @@ func (dr *DatabaseRepository) GetOpCounters(c context.Context) (*value_object.Op
 		return nil, errors.New("`opcounters` type assertion failed")
 	}
 
+	insert, ok := ocs["insert"].(int64)
+	if !ok {
+		return nil, errors.New("`insert` type assertion failed")
+	}
+	query, ok := ocs["query"].(int64)
+	if !ok {
+		return nil, errors.New("`query` type assertion failed")
+	}
+	update, ok := ocs["update"].(int64)
+	if !ok {
+		return nil, errors.New("`update` type assertion failed")
+	}
+	delete, ok := ocs["delete"].(int64)
+	if !ok {
+		return nil, errors.New("`delete` type assertion failed")
+	}
+
 	opcounters := value_object.OpCounters{
-		Insert: domain.Metric{
-			Value:     ocs["insert"],
+		Insert: domain.Metric[int64]{
+			Value:     insert,
 			Timestamp: time.Now(),
 		},
-		Query: domain.Metric{
-			Value:     ocs["query"],
+		Query: domain.Metric[int64]{
+			Value:     query,
 			Timestamp: time.Now(),
 		},
-		Update: domain.Metric{
-			Value:     ocs["update"],
+		Update: domain.Metric[int64]{
+			Value:     update,
 			Timestamp: time.Now(),
 		},
-		Delete: domain.Metric{
-			Value:     ocs["delete"],
+		Delete: domain.Metric[int64]{
+			Value:     delete,
 			Timestamp: time.Now(),
 		},
 	}

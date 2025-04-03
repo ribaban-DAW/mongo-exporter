@@ -21,13 +21,22 @@ func (dr *DatabaseRepository) GetCpu(c context.Context) (*value_object.Cpu, erro
 		return nil, errors.New("`extraInfo` type assertion failed")
 	}
 
+	userTime, ok := extraInfo["user_time_us"].(int64)
+	if !ok {
+		return nil, errors.New("`user_time_us` type assertion failed")
+	}
+	systemTime, ok := extraInfo["system_time_us"].(int64)
+	if !ok {
+		return nil, errors.New("`system_time_us` type assertion failed")
+	}
+
 	cpu := value_object.Cpu{
-		UserTime: domain.Metric{
-			Value:     extraInfo["user_time_us"],
+		UserTime: domain.Metric[int64]{
+			Value:     userTime,
 			Timestamp: time.Now(),
 		},
-		SystemTime: domain.Metric{
-			Value:     extraInfo["system_time_us"],
+		SystemTime: domain.Metric[int64]{
+			Value:     systemTime,
 			Timestamp: time.Now(),
 		},
 	}

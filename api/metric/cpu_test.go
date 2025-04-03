@@ -20,8 +20,8 @@ func TestGetCpu(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 
 	cpu := value_object.Cpu{
-		UserTime:   domain.Metric{Value: int64(10000)},
-		SystemTime: domain.Metric{Value: int64(1000)},
+		UserTime:   domain.Metric[int64]{Value: 10000},
+		SystemTime: domain.Metric[int64]{Value: 1000},
 	}
 
 	repo := mockrepo.NewMockRepository(nil, &cpu, nil, nil)
@@ -37,7 +37,7 @@ func TestGetCpu(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, want.UserTime.Value, int64(got.UserTime.Value.(float64)))
-	assert.Equal(t, want.SystemTime.Value, int64(got.SystemTime.Value.(float64)))
-	assert.Equal(t, want.TotalTime.Value, int64(got.TotalTime.Value.(float64)))
+	assert.Equal(t, want.UserTime.Value, got.UserTime.Value)
+	assert.Equal(t, want.SystemTime.Value, got.SystemTime.Value)
+	assert.Equal(t, want.TotalTime.Value, got.TotalTime.Value)
 }

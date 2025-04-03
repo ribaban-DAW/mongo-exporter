@@ -20,8 +20,8 @@ func TestGetRam(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 
 	ram := value_object.Ram{
-		Resident: domain.Metric{Value: int32(10000)},
-		Virtual:  domain.Metric{Value: int32(50000)},
+		Resident: domain.Metric[int32]{Value: 10000},
+		Virtual:  domain.Metric[int32]{Value: 50000},
 	}
 
 	repo := mockrepo.NewMockRepository(nil, nil, nil, &ram)
@@ -37,6 +37,6 @@ func TestGetRam(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, want.Resident.Value, int32(got.Resident.Value.(float64)))
-	assert.Equal(t, want.Virtual.Value, int32(got.Virtual.Value.(float64)))
+	assert.Equal(t, want.Resident.Value, got.Resident.Value)
+	assert.Equal(t, want.Virtual.Value, got.Virtual.Value)
 }

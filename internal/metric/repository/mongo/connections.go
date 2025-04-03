@@ -21,21 +21,38 @@ func (dr *DatabaseRepository) GetConnections(c context.Context) (*value_object.C
 		return nil, errors.New("`connections` type assertion failed")
 	}
 
+	current, ok := conn["current"].(int32)
+	if !ok {
+		return nil, errors.New("`current` type assertion failed")
+	}
+	available, ok := conn["available"].(int32)
+	if !ok {
+		return nil, errors.New("`available` type assertion failed")
+	}
+	totalCreated, ok := conn["totalCreated"].(int32)
+	if !ok {
+		return nil, errors.New("`totalCreated` type assertion failed")
+	}
+	active, ok := conn["active"].(int32)
+	if !ok {
+		return nil, errors.New("`active` type assertion failed")
+	}
+
 	connections := value_object.Connections{
-		Current: domain.Metric{
-			Value:     conn["current"],
+		Current: domain.Metric[int32]{
+			Value:     current,
 			Timestamp: time.Now(),
 		},
-		Available: domain.Metric{
-			Value:     conn["available"],
+		Available: domain.Metric[int32]{
+			Value:     available,
 			Timestamp: time.Now(),
 		},
-		TotalCreated: domain.Metric{
-			Value:     conn["totalCreated"],
+		TotalCreated: domain.Metric[int32]{
+			Value:     totalCreated,
 			Timestamp: time.Now(),
 		},
-		Active: domain.Metric{
-			Value:     conn["active"],
+		Active: domain.Metric[int32]{
+			Value:     active,
 			Timestamp: time.Now(),
 		},
 	}

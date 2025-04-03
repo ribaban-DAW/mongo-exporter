@@ -5,8 +5,8 @@ import (
 )
 
 type OpCounters struct {
-	Insert domain.Metric `json:"insert"`
-	Delete domain.Metric `json:"delete"`
-	Query  domain.Metric `json:"query"`
-	Update domain.Metric `json:"update"`
+	Insert domain.Metric[int64] `json:"insert"`
+	Delete domain.Metric[int64] `json:"delete"`
+	Query  domain.Metric[int64] `json:"query"`
+	Update domain.Metric[int64] `json:"update"`
 }

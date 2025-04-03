@@ -20,10 +20,10 @@ func TestGetOpCounters(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 
 	opcounters := value_object.OpCounters{
-		Delete: domain.Metric{Value: int64(250)},
-		Insert: domain.Metric{Value: int64(500)},
-		Query:  domain.Metric{Value: int64(1000)},
-		Update: domain.Metric{Value: int64(5000)},
+		Delete: domain.Metric[int64]{Value: 250},
+		Insert: domain.Metric[int64]{Value: 500},
+		Query:  domain.Metric[int64]{Value: 1000},
+		Update: domain.Metric[int64]{Value: 5000},
 	}
 
 	repo := mockrepo.NewMockRepository(nil, nil, &opcounters, nil)
@@ -39,8 +39,8 @@ func TestGetOpCounters(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, want.Delete.Value, int64(got.Delete.Value.(float64)))
-	assert.Equal(t, want.Insert.Value, int64(got.Insert.Value.(float64)))
-	assert.Equal(t, want.Query.Value, int64(got.Query.Value.(float64)))
-	assert.Equal(t, want.Update.Value, int64(got.Update.Value.(float64)))
+	assert.Equal(t, want.Delete.Value, got.Delete.Value)
+	assert.Equal(t, want.Insert.Value, got.Insert.Value)
+	assert.Equal(t, want.Query.Value, got.Query.Value)
+	assert.Equal(t, want.Update.Value, got.Update.Value)
 }
