@@ -24,7 +24,7 @@ func TestGetCpu(t *testing.T) {
 		SystemTime: domain.Metric[int64]{Value: 1000},
 	}
 
-	repo := mockrepo.NewMockRepository(nil, &cpu, nil, nil)
+	repo := mockrepo.NewMockRepository(nil, nil, &cpu, nil, nil)
 	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/v1/metrics/cpu", nil)

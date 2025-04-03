@@ -11,7 +11,10 @@ import (
 )
 
 func (dr *DatabaseRepository) GetRam(c context.Context) (*value_object.Ram, error) {
-	serverStatus, err := dr.getServerStatus(c)
+	cmd := bson.D{
+		{Key: "serverStatus", Value: 1},
+	}
+	serverStatus, err := dr.getCommand(c, cmd)
 	if err != nil {
 		return nil, err
 	}

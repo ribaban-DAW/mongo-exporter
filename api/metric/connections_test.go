@@ -25,7 +25,7 @@ func TestGetConnections(t *testing.T) {
 		TotalCreated: domain.Metric[int32]{Value: 100000},
 		Active:       domain.Metric[int32]{Value: 300},
 	}
-	repo := mockrepo.NewMockRepository(&connections, nil, nil, nil)
+	repo := mockrepo.NewMockRepository(nil, &connections, nil, nil, nil)
 	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/v1/metrics/connections", nil)

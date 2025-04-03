@@ -7,14 +7,15 @@ primer año en el Grado Superior de Desarrollo de Aplicaciones Web en la empresa
 
 # API Endpoints
 
-| Método | Endpoint                  | Descripción                                   |
-| ------ | ------------------------- | --------------------------------------------- |
-| `GET`  | `/v1/healthcheck`         | Obtener el estado de la API                   |
-| `GET`  | `/v1/hello`               | Obtener el mensaje "hello world"              |
-| `GET`  | `/v1/metrics/connections` | Obtener métricas relacionadas con conexiones  |
-| `GET`  | `/v1/metrics/cpu`         | Obtener métricas relacionadas con CPU         |
-| `GET`  | `/v1/metrics/opcounters`  | Obtener métricas relacionadas con operaciones |
-| `GET`  | `/v1/metrics/ram`         | Obtener métricas relacionadas con RAM         |
+| Método | Endpoint                  | Descripción                                                                                              |
+| ------ | ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `GET`  | `/v1/healthcheck`         | Obtener el estado de la API                                                                              |
+| `GET`  | `/v1/hello`               | Obtener el mensaje "hello world"                                                                         |
+| `GET`  | `/v1/metrics/collection`  | Obtener métricas relacionadas a una colección. Requiere los parámetros de consulta `dbName` y `collName` |
+| `GET`  | `/v1/metrics/connections` | Obtener métricas relacionadas con conexiones del servidor                                                |
+| `GET`  | `/v1/metrics/cpu`         | Obtener métricas relacionadas con CPU del servidor                                                       |
+| `GET`  | `/v1/metrics/opcounters`  | Obtener métricas relacionadas con operaciones del servidor                                               |
+| `GET`  | `/v1/metrics/ram`         | Obtener métricas relacionadas con RAM del servidor                                                       |
 
 # Uso
 
@@ -69,6 +70,12 @@ curl o cualquier otro método que prefieras.
 
 ```
 curl http://localhost:8080/v1/metrics/cpu
+```
+
+- Para obtener métricas relacionadas a la Colección `bar` de la Base de datos `foo`:
+
+```
+curl http://localhost:8080/v1/metrics/collection?dbName=foo&collName=bar
 ```
 
 Revisa [API Endpoints](#api-endpoints) para ver los endpoints disponibles.

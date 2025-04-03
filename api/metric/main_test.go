@@ -1,14 +1,14 @@
 package metric
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"testing"
 )
 
 func TestMain(m *testing.M) {
-	log.SetOutput(ioutil.Discard)
+	log.SetOutput(io.Discard)
 	code := m.Run()
 	os.Exit(code)
 }

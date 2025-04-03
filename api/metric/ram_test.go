@@ -24,7 +24,7 @@ func TestGetRam(t *testing.T) {
 		Virtual:  domain.Metric[int32]{Value: 50000},
 	}
 
-	repo := mockrepo.NewMockRepository(nil, nil, nil, &ram)
+	repo := mockrepo.NewMockRepository(nil, nil, nil, nil, &ram)
 	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/v1/metrics/ram", nil)

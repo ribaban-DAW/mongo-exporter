@@ -11,7 +11,10 @@ import (
 )
 
 func (dr *DatabaseRepository) GetOpCounters(c context.Context) (*value_object.OpCounters, error) {
-	serverStatus, err := dr.getServerStatus(c)
+	cmd := bson.D{
+		{Key: "serverStatus", Value: 1},
+	}
+	serverStatus, err := dr.getCommand(c, cmd)
 	if err != nil {
 		return nil, err
 	}
