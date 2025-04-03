@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
@@ -24,38 +25,31 @@ func (dr *DatabaseRepository) GetOpCounters(c context.Context) (*value_object.Op
 		return nil, errors.New("`opcounters` type assertion failed")
 	}
 
-	insert, ok := ocs["insert"].(int64)
-	if !ok {
-		return nil, errors.New("`insert` type assertion failed")
-	}
-	query, ok := ocs["query"].(int64)
-	if !ok {
-		return nil, errors.New("`query` type assertion failed")
-	}
-	update, ok := ocs["update"].(int64)
-	if !ok {
-		return nil, errors.New("`update` type assertion failed")
-	}
-	delete, ok := ocs["delete"].(int64)
-	if !ok {
-		return nil, errors.New("`delete` type assertion failed")
+	keys := []string{"insert", "query", "update", "delete"}
+	var values = map[string]int64{}
+	for _, key := range keys {
+		if k, ok := ocs[key].(int64); ok {
+			values[key] = k
+		} else {
+			return nil, fmt.Errorf("`%s` type assertion failed", key)
+		}
 	}
 
 	opcounters := value_object.OpCounters{
 		Insert: domain.Metric[int64]{
-			Value:     insert,
+			Value:     values["insert"],
 			Timestamp: time.Now(),
 		},
 		Query: domain.Metric[int64]{
-			Value:     query,
+			Value:     values["query"],
 			Timestamp: time.Now(),
 		},
 		Update: domain.Metric[int64]{
-			Value:     update,
+			Value:     values["update"],
 			Timestamp: time.Now(),
 		},
 		Delete: domain.Metric[int64]{
-			Value:     delete,
+			Value:     values["delete"],
 			Timestamp: time.Now(),
 		},
 	}

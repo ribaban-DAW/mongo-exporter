@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
@@ -24,38 +25,31 @@ func (dr *DatabaseRepository) GetConnections(c context.Context) (*value_object.C
 		return nil, errors.New("`connections` type assertion failed")
 	}
 
-	current, ok := conn["current"].(int32)
-	if !ok {
-		return nil, errors.New("`current` type assertion failed")
-	}
-	available, ok := conn["available"].(int32)
-	if !ok {
-		return nil, errors.New("`available` type assertion failed")
-	}
-	totalCreated, ok := conn["totalCreated"].(int32)
-	if !ok {
-		return nil, errors.New("`totalCreated` type assertion failed")
-	}
-	active, ok := conn["active"].(int32)
-	if !ok {
-		return nil, errors.New("`active` type assertion failed")
+	keys := []string{"current", "available", "totalCreated", "active"}
+	var values = map[string]int32{}
+	for _, key := range keys {
+		if k, ok := conn[key].(int32); ok {
+			values[key] = k
+		} else {
+			return nil, fmt.Errorf("`%s` type assertion failed", key)
+		}
 	}
 
 	connections := value_object.Connections{
 		Current: domain.Metric[int32]{
-			Value:     current,
+			Value:     values["current"],
 			Timestamp: time.Now(),
 		},
 		Available: domain.Metric[int32]{
-			Value:     available,
+			Value:     values["available"],
 			Timestamp: time.Now(),
 		},
 		TotalCreated: domain.Metric[int32]{
-			Value:     totalCreated,
+			Value:     values["totalCreated"],
 			Timestamp: time.Now(),
 		},
 		Active: domain.Metric[int32]{
-			Value:     active,
+			Value:     values["active"],
 			Timestamp: time.Now(),
 		},
 	}

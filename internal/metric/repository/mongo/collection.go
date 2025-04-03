@@ -30,12 +30,12 @@ func (dr *DatabaseRepository) GetCollection(c context.Context, collName string) 
 		return nil, errors.New("`collection` type assertion failed")
 	}
 
-	values := []string{"insert", "queries", "update", "remove"}
-	var result = map[string]int32{}
-	for _, value := range values {
-		if k, ok := coll[value].(bson.M); ok {
+	keys := []string{"insert", "queries", "update", "remove"}
+	var values = map[string]int32{}
+	for _, key := range keys {
+		if k, ok := coll[key].(bson.M); ok {
 			if c, ok := k["count"].(int32); ok {
-				result[value] = c
+				values[key] = c
 			} else {
 				return nil, fmt.Errorf("%s `count` type assertion failed", k)
 			}
@@ -44,19 +44,19 @@ func (dr *DatabaseRepository) GetCollection(c context.Context, collName string) 
 
 	collection := value_object.Collection{
 		Insert: domain.Metric[int32]{
-			Value:     result["insert"],
+			Value:     values["insert"],
 			Timestamp: time.Now(),
 		},
 		Remove: domain.Metric[int32]{
-			Value:     result["remove"],
+			Value:     values["remove"],
 			Timestamp: time.Now(),
 		},
 		Update: domain.Metric[int32]{
-			Value:     result["update"],
+			Value:     values["update"],
 			Timestamp: time.Now(),
 		},
 		Queries: domain.Metric[int32]{
-			Value:     result["queries"],
+			Value:     values["queries"],
 			Timestamp: time.Now(),
 		},
 	}

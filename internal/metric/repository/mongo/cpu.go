@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
@@ -24,22 +25,23 @@ func (dr *DatabaseRepository) GetCpu(c context.Context) (*value_object.Cpu, erro
 		return nil, errors.New("`extraInfo` type assertion failed")
 	}
 
-	userTime, ok := extraInfo["user_time_us"].(int64)
-	if !ok {
-		return nil, errors.New("`user_time_us` type assertion failed")
-	}
-	systemTime, ok := extraInfo["system_time_us"].(int64)
-	if !ok {
-		return nil, errors.New("`system_time_us` type assertion failed")
+	keys := []string{"user_time_us", "system_time_us"}
+	var values = map[string]int64{}
+	for _, key := range keys {
+		if k, ok := extraInfo[key].(int64); ok {
+			values[key] = k
+		} else {
+			return nil, fmt.Errorf("`%s` type assertion failed", key)
+		}
 	}
 
 	cpu := value_object.Cpu{
 		UserTime: domain.Metric[int64]{
-			Value:     userTime,
+			Value:     values["user_time_us"],
 			Timestamp: time.Now(),
 		},
 		SystemTime: domain.Metric[int64]{
-			Value:     systemTime,
+			Value:     values["system_time_us"],
 			Timestamp: time.Now(),
 		},
 	}
