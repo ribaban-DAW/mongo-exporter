@@ -41,9 +41,13 @@ cp .env.example .env
 
 ```
 APP_PORT=8080
+
 DB_NAME=MyDatabaseName
 DB_HOST=mongo
 DB_PORT=27017
+
+GRAFANA_USER=admin
+GRAFANA_PASS=grafana
 ```
 
 Build the containers
@@ -91,3 +95,4 @@ Check [API Endpoints](#api-endpoints) to see available endpoints.
 - https://www.youtube.com/watch?v=bDWApqAUjEI
 - https://www.youtube.com/watch?v=g7cNQB2kCgE
 - https://www.mongodb.com/docs/manual/reference/command/serverStatus/
+- https://github.com/docker/awesome-compose/tree/master/prometheus-grafana

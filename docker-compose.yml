@@ -6,15 +6,17 @@ services:
     build:
       context: docker/mongo
     env_file: .env
-    tty: true
+    environment:
+      MONGO_INITDB_DATABASE: ${DB_NAME}
     ports:
       - ${DB_PORT}:27017
-    environment:
-        MONGO_INITDB_DATABASE: ${DB_NAME}
-    volumes:
-      - mongo-data:/data/db
     networks:
       - mongo-exporter-network
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - mongo-data:/data/db
+
   app:
     container_name: app
     build:
@@ -24,16 +26,52 @@ services:
     env_file: .env
     depends_on:
       - database
-    ports:
-      - ${APP_PORT}:8080
-    networks:
-      - mongo-exporter-network
     environment:
       - MONGO_URI=mongodb://${DB_HOST}:${DB_PORT}
+    networks:
+      - mongo-exporter-network
+    ports:
+      - ${APP_PORT}:8080
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      - app
+    ports:
+      - 9090:9090
+    networks:
+      - mongo-exporter-network
+    restart: unless-stopped
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prom-data:/prometheus
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASS}
+    networks:
+      - mongo-exporter-network
+    restart: unless-stopped
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
 
 # Docker Volumes
 volumes:
   mongo-data:
+  prom-data:
+  grafana-data:
 
 # Docker Networks
 networks:

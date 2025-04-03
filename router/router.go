@@ -23,6 +23,7 @@ func setupRouter() *gin.Engine {
 	addHealthcheckRoutes(v1)
 	addHelloRoutes(v1)
 	addMetricRoutes(v1)
+	addPrometheusRoute(v1)
 
 	return router
 }
