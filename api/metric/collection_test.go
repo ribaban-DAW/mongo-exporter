@@ -15,32 +15,32 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetOpCounters(t *testing.T) {
+func TestGetCollection(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	opcounters := value_object.OpCounters{
-		Delete: domain.Metric[int64]{Value: 250},
-		Insert: domain.Metric[int64]{Value: 500},
-		Query:  domain.Metric[int64]{Value: 1000},
-		Update: domain.Metric[int64]{Value: 5000},
+	collection := value_object.Collection{
+		Remove:  domain.Metric[int32]{Value: 59},
+		Insert:  domain.Metric[int32]{Value: 123121},
+		Queries: domain.Metric[int32]{Value: 2},
+		Update:  domain.Metric[int32]{Value: 3},
 	}
 
-	repo := mockrepo.NewMockRepository(nil, nil, nil, &opcounters, nil)
+	repo := mockrepo.NewMockRepository(&collection, nil, nil, nil, nil)
 	service := service.NewMetricService(repo)
 
-	c.Request, _ = http.NewRequest(http.MethodGet, "/v1/metrics/opcounters", nil)
-	mockhand.GetOpCountersHandlerMock(service, c)
+	c.Request, _ = http.NewRequest(http.MethodGet, "/v1/metrics/collection", nil)
+	mockhand.GetCollectionHandlerMock(service, c)
 	assert.Equal(t, http.StatusOK, w.Code)
 
-	want := opcounters
-	var got value_object.OpCounters
+	want := collection
+	var got value_object.Collection
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, want.Delete.Value, got.Delete.Value)
+	assert.Equal(t, want.Remove.Value, got.Remove.Value)
 	assert.Equal(t, want.Insert.Value, got.Insert.Value)
-	assert.Equal(t, want.Query.Value, got.Query.Value)
+	assert.Equal(t, want.Queries.Value, got.Queries.Value)
 	assert.Equal(t, want.Update.Value, got.Update.Value)
 }

@@ -5,7 +5,7 @@ import (
 )
 
 type Cpu struct {
-	UserTime   domain.Metric `json:"userTime"`
-	SystemTime domain.Metric `json:"systemTime"`
-	TotalTime  domain.Metric `json:"totalTime"`
+	UserTime   domain.Metric[int64] `json:"userTime"`
+	SystemTime domain.Metric[int64] `json:"systemTime"`
+	TotalTime  domain.Metric[int64] `json:"totalTime"`
 }

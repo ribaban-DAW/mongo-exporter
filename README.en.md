@@ -6,14 +6,15 @@ the data. It's developed as part of my first year internship in
 
 # API Endpoints
 
-| Method | Endpoint                  | Description                        |
-| ------ | ------------------------- | ---------------------------------- |
-| `GET`  | `/v1/healthcheck`         | Get the health status of the API   |
-| `GET`  | `/v1/hello`               | Get "hello world" message          |
-| `GET`  | `/v1/metrics/connections` | Get metrics related to connections |
-| `GET`  | `/v1/metrics/cpu`         | Get metrics related to CPU         |
-| `GET`  | `/v1/metrics/opcounters`  | Get metrics related to operations  |
-| `GET`  | `/v1/metrics/ram`         | Get metrics related to RAM         |
+| Method | Endpoint                  | Description                                                                          |
+| ------ | ------------------------- | ------------------------------------------------------------------------------------ |
+| `GET`  | `/v1/healthcheck`         | Get the health status of the API                                                     |
+| `GET`  | `/v1/hello`               | Get "hello world" message                                                            |
+| `GET`  | `/v1/metrics/collection`  | Get metrics related to collection. Requires query parameters `dbName` and `collName` |
+| `GET`  | `/v1/metrics/connections` | Get metrics related to server connections                                            |
+| `GET`  | `/v1/metrics/cpu`         | Get metrics related to server CPU                                                    |
+| `GET`  | `/v1/metrics/opcounters`  | Get metrics related to server operations                                             |
+| `GET`  | `/v1/metrics/ram`         | Get metrics related to server RAM                                                    |
 
 # Usage
 
@@ -40,9 +41,13 @@ cp .env.example .env
 
 ```
 APP_PORT=8080
+
 DB_NAME=MyDatabaseName
 DB_HOST=mongo
 DB_PORT=27017
+
+GRAFANA_USER=admin
+GRAFANA_PASS=grafana
 ```
 
 Build the containers
@@ -69,6 +74,12 @@ any method you prefer.
 curl http://localhost:8080/v1/metrics/cpu
 ```
 
+- To get metrics related to Collection `bar` from Database `foo`:
+
+```
+curl http://localhost:8080/v1/metrics/collection?dbName=foo&collName=bar
+```
+
 Check [API Endpoints](#api-endpoints) to see available endpoints.
 
 # References
@@ -84,3 +95,4 @@ Check [API Endpoints](#api-endpoints) to see available endpoints.
 - https://www.youtube.com/watch?v=bDWApqAUjEI
 - https://www.youtube.com/watch?v=g7cNQB2kCgE
 - https://www.mongodb.com/docs/manual/reference/command/serverStatus/
+- https://github.com/docker/awesome-compose/tree/master/prometheus-grafana

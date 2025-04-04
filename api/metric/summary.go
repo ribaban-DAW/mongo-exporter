@@ -12,7 +12,7 @@ func GetSummaryHandler(ms *service.MetricService) gin.HandlerFunc {
 		c.JSON(
 			http.StatusOK,
 			gin.H{
-				"available": []string{"connections", "cpu", "opcounters", "ram"},
+				"available": []string{"collection", "connections", "cpu", "opcounters", "ram"},
 			},
 		)
 	}

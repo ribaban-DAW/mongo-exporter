@@ -41,4 +41,9 @@ func addMetricRoutes(rg *gin.RouterGroup) {
 		metric.GetConnectionsHandler(service)(c)
 	})
 	log.Println("Added route /metrics/connections")
+
+	m.GET("/collection", func(c *gin.Context) {
+		metric.GetCollectionHandler(service)(c)
+	})
+	log.Println("Added route /metrics/collection")
 }

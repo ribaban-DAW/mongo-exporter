@@ -9,7 +9,7 @@ import (
 	mockhand "github.com/SrVariable/mongo-exporter/api/metric/mock"
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain/value_object"
-	mockrepo "github.com/SrVariable/mongo-exporter/internal/metric/mock/repository"
+	mockrepo "github.com/SrVariable/mongo-exporter/internal/metric/repository/mock"
 	"github.com/SrVariable/mongo-exporter/internal/metric/service"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -20,12 +20,12 @@ func TestGetConnections(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 
 	connections := value_object.Connections{
-		Available:    domain.Metric{Value: int32(10000)},
-		Current:      domain.Metric{Value: int32(50000)},
-		TotalCreated: domain.Metric{Value: int32(100000)},
-		Active:       domain.Metric{Value: int32(300)},
+		Available:    domain.Metric[int32]{Value: 10000},
+		Current:      domain.Metric[int32]{Value: 50000},
+		TotalCreated: domain.Metric[int32]{Value: 100000},
+		Active:       domain.Metric[int32]{Value: 300},
 	}
-	repo := mockrepo.NewMockRepository(&connections, nil, nil, nil)
+	repo := mockrepo.NewMockRepository(nil, &connections, nil, nil, nil)
 	service := service.NewMetricService(repo)
 
 	c.Request, _ = http.NewRequest(http.MethodGet, "/v1/metrics/connections", nil)
@@ -38,5 +38,5 @@ func TestGetConnections(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, want.Available.Value, int32(got.Available.Value.(float64)))
+	assert.Equal(t, want.Available.Value, got.Available.Value)
 }

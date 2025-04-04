@@ -5,6 +5,6 @@ import (
 )
 
 type Ram struct {
-	Resident domain.Metric `json:"resident"`
-	Virtual  domain.Metric `json:"virtual"`
+	Resident domain.Metric[int32] `json:"resident"`
+	Virtual  domain.Metric[int32] `json:"virtual"`
 }

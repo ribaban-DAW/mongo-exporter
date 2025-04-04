@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/SrVariable/mongo-exporter/internal/metric/domain"
@@ -11,7 +12,10 @@ import (
 )
 
 func (dr *DatabaseRepository) GetRam(c context.Context) (*value_object.Ram, error) {
-	serverStatus, err := dr.getServerStatus(c)
+	cmd := bson.D{
+		{Key: "serverStatus", Value: 1},
+	}
+	serverStatus, err := dr.getCommand(c, cmd)
 	if err != nil {
 		return nil, err
 	}
@@ -21,13 +25,23 @@ func (dr *DatabaseRepository) GetRam(c context.Context) (*value_object.Ram, erro
 		return nil, errors.New("`mem` type assertion failed")
 	}
 
+	keys := []string{"resident", "virtual"}
+	var values = map[string]int32{}
+	for _, key := range keys {
+		if k, ok := mem[key].(int32); ok {
+			values[key] = k
+		} else {
+			return nil, fmt.Errorf("`%s` type assertion failed", key)
+		}
+	}
+
 	ram := value_object.Ram{
-		Resident: domain.Metric{
-			Value:     mem["resident"],
+		Resident: domain.Metric[int32]{
+			Value:     values["resident"],
 			Timestamp: time.Now(),
 		},
-		Virtual: domain.Metric{
-			Value:     mem["virtual"],
+		Virtual: domain.Metric[int32]{
+			Value:     values["virtual"],
 			Timestamp: time.Now(),
 		},
 	}
